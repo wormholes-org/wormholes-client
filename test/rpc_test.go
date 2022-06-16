@@ -3,7 +3,7 @@ package test
 import (
 	"context"
 	"encoding/json"
-	"github.com/wormholesclient/client"
+	"github.com/wormholes-org/wormholesclient/client"
 	"fmt"
 	"math/rand"
 	"testing"

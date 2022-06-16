@@ -3,8 +3,8 @@ package client
 import (
 	"context"
 	"encoding/json"
-	"github.com/wormholesclient/tools"
-	types2 "github.com/wormholesclient/types"
+	"github.com/wormholes-org/wormholesclient/tools"
+	types2 "github.com/wormholes-org/wormholesclient/types"
 	"fmt"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"

@@ -2,7 +2,7 @@ package test
 
 import (
 	"context"
-	"github.com/wormholesclient/client"
+	"github.com/wormholes-org/wormholesclient/client"
 	"fmt"
 	"log"
 	"testing"
