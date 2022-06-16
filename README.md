@@ -3,7 +3,7 @@
 - ## 安装
 
 ```go
-go get https://github.com/wormholes-org/wormholesclient.git
+go get github.com/wormholes-org/wormholesclient
 ```
 
 - ## 客户端
