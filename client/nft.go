@@ -164,6 +164,27 @@ func (nft *NFT) TransactionReceipt(ctx context.Context, txHash common.Hash) (*ty
 	return r, err
 }
 
+func (nft *NFT) QueryMinerProxy(ctx context.Context, number int64, account string) (types2.MinerProxyList, error) {
+	var result types2.MinerProxyList
+	nu := fmt.Sprintf("0x%x", number)
+	err := nft.c.CallContext(ctx, &result, "eth_queryMinerProxy", nu, account)
+	if err != nil {
+		return nil, err
+	}
+	return result, err
+}
+
+func (nft *NFT) GetActiveLivePool(ctx context.Context, number uint64) (*types2.ActiveMinerList, error) {
+	var al *types2.ActiveMinerList
+	nu := rpc.BlockNumber(number)
+	err := nft.c.CallContext(ctx, &al, "eth_getActiveLivePool", nu)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(al)
+	return al, err
+}
+
 func (nft *NFT) GetAccountInfo(ctx context.Context, address common.Address, block int64) (*types2.Account, error) {
 	blockNrOrHash := rpc.BlockNumberOrHashWithNumber(rpc.BlockNumber(block))
 	var r *types2.Account
