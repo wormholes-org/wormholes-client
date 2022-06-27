@@ -4,25 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2914a8b1-9edb-4a1f-98f4-953678c737e7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/api.go" beforeDir="false" afterPath="$PROJECT_DIR$/client/api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/nft.go" beforeDir="false" afterPath="$PROJECT_DIR$/client/nft.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/singer.go" beforeDir="false" afterPath="$PROJECT_DIR$/client/singer.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/transaction.go" beforeDir="false" afterPath="$PROJECT_DIR$/client/transaction.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/rpc_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/transaction_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/util_test.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/utils.go" beforeDir="false" afterPath="$PROJECT_DIR$/tools/utils.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/types/nft.go" beforeDir="false" afterPath="$PROJECT_DIR$/types/nft.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/types/types.go" beforeDir="false" afterPath="$PROJECT_DIR$/types/types.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wormholesclient.iml" beforeDir="false" />
-    </list>
+    <list default="true" id="2914a8b1-9edb-4a1f-98f4-953678c737e7" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
