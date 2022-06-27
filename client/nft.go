@@ -3,8 +3,6 @@ package client
 import (
 	"context"
 	"encoding/json"
-	"github.com/wormholes-org/wormholesclient/tools"
-	types2 "github.com/wormholes-org/wormholesclient/types"
 	"fmt"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
@@ -12,8 +10,10 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/rpc"
+	types2 "github.com/wormholes-org/wormholesclient/types"
 	"log"
 	"math/big"
+	"wormholes-client/tools"
 )
 
 type WormClient struct {
@@ -229,11 +229,11 @@ func (w *Wallet) sign(data []byte, priKey string) ([]byte, error) {
 }
 
 // SignBuyer
-//amount: 买家购买NFT的金额， 格式为十六进制字符串
-//nftAddress: 交易的NFT地址， 格式为十六进制字符串，填写该字段时，表示交易已铸造的nft，不填写时，表示惰性交易，nft未铸造
-//exchanger: 交易发生所在的交易所， 格式为十进制字符串
-//blockNumber: 块高度， 代表此交易在此高度之前发生才有效， 格式为十六进制字符串
-//seller: 卖家地址， 格式是十六进制字符串
+//amount: The amount the buyer purchased the NFT, formatted as a hexadecimal string
+//nftAddress: The NFT address of the transaction. The format is a hexadecimal string. When this field is filled in, it means that the transaction has minted nft. When not filled, it means lazy transaction, and the nft has not been minted
+//exchanger: The exchange on which the transaction took place, formatted as a decimal string
+//blockNumber: Block height, which means that this transaction is valid before this height, the format is a hexadecimal string
+//seller: Seller's address, formatted as a hexadecimal string
 func (w *Wallet) SignBuyer(amount, nftAddress, exchanger, blockNumber, seller string) ([]byte, error) {
 	//am := core.StartClefAccountManager("/home/user1/azh/data/node15/keystore", true, false, "") //获取account
 	key, err := crypto.HexToECDSA(w.priKey)
@@ -266,11 +266,11 @@ func (w *Wallet) SignBuyer(amount, nftAddress, exchanger, blockNumber, seller st
 }
 
 // SignSeller1
-// 签名已铸币卖家
-//	amount: nft交易金额，十六进制字符串
-//	nftAddress: 交易的nft地址，十六进制字符串
-//	exchanger:	交易发生所在的交易所， 格式为十进制字符串
-//	blockNumber: 块高度， 代表此交易在此高度之前发生才有效， 格式为十六进制字符串
+// Signed Mint Seller
+//	amount: The amount the buyer purchased the NFT, formatted as a hexadecimal string
+//	nftAddress: The NFT address of the transaction, formatted as a hexadecimal string
+//	exchanger:	The exchange on which the transaction took place, formatted as a decimal string
+//	blockNumber: Block height, which means that this transaction is valid before this height, the format is a hexadecimal string
 func (w *Wallet) SignSeller1(amount, nftAddress, exchanger, blockNumber string) ([]byte, error) {
 	//am := core.StartClefAccountManager("/home/user1/azh/data/node15/keystore", true, false, "") //获取account
 	key, err := crypto.HexToECDSA(w.priKey)
@@ -302,15 +302,14 @@ func (w *Wallet) SignSeller1(amount, nftAddress, exchanger, blockNumber string) 
 }
 
 // SignSeller2
-// 签名未铸币卖家
-//	amount: nft交易金额，十六进制字符串
-//	royalty: 版税，十六进制字符串
-//	metaURL: NFT元数据地址
-//	exclusiveFlag: ”0”:非独占,”1”:独占
-//	exchanger:	铸造NFT时的交易所，格式为字符串，填写该字段时，该交易所独占此NFT，不填写时，没有交易所独占此NFT
-//	blockNumber: 块高度， 代表此交易在此高度之前发生才有效， 格式为十六进制字符串
+// Signed Unminted Seller
+//	amount: The amount of the NFT transaction, formatted as a hexadecimal string
+//	royalty: royalty, hex string
+//	metaURL: NFT metadata address
+//	exclusiveFlag: "0": Inclusive, "1": Exclusive
+//	exchanger:	The exchange on which the transaction took place, formatted as a decimal string
+//	blockNumber: Block height, which means that this transaction is valid before this height, the format is a hexadecimal string
 func (w *Wallet) SignSeller2(amount, royalty, metaURL, exclusiveFlag, exchanger, blockNumber string) ([]byte, error) {
-	//am := core.StartClefAccountManager("/home/user1/azh/data/node15/keystore", true, false, "") //获取account
 	key, err := crypto.HexToECDSA(w.priKey)
 	if err != nil {
 		return nil, err
@@ -342,12 +341,11 @@ func (w *Wallet) SignSeller2(amount, royalty, metaURL, exclusiveFlag, exchanger,
 }
 
 // SignExchanger
-// 被授权交易所签名
-//	exchangerOwner: 授权交易所， 格式为十六进制字符串
-// 	to: 被授权交易所， 格式为十六进制字符串
-//	block_number: 块高度， 代表授权在此高度之前有效， 格式为十六进制字符串
+// Signed by an authorized exchange
+//	exchangerOwner: Authorize exchange, formatted as a hexadecimal string
+// 	to: Authorized exchange, formatted as a hexadecimal string
+//	block_number: Block height, which means that this transaction is valid before this height, the format is a hexadecimal string
 func (w *Wallet) SignExchanger(exchangerOwner, to, blockNumber string) ([]byte, error) {
-	//am := core.StartClefAccountManager("/home/user1/azh/data/node15/keystore", true, false, "") //获取account
 	key, err := crypto.HexToECDSA(w.priKey)
 	if err != nil {
 		return nil, err
