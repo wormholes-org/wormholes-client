@@ -1,4 +1,4 @@
-module wormholes-client
+module github.com/wormholes-org/wormholes-client
 
 go 1.17
 
