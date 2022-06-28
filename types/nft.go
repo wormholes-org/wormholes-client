@@ -50,6 +50,13 @@ type AccountNFT struct {
 	MetaURL   string
 }
 
+type BeneficiaryAddress struct {
+	Address    common.Address
+	NftAddress common.Address
+}
+
+type BeneficiaryAddressList []*BeneficiaryAddress
+
 type ActiveMiner struct {
 	Address common.Address
 	Balance *big.Int

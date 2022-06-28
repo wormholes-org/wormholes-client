@@ -10,10 +10,10 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/wormholes-org/wormholes-client/tools"
 	types2 "github.com/wormholes-org/wormholes-client/types"
 	"log"
 	"math/big"
-	"wormholes-client/tools"
 )
 
 type WormClient struct {
