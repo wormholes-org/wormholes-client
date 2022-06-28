@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/wormholes-org/wormholesclient/client"
+	"github.com/wormholes-org/wormholes-client/client"
 	"math/rand"
 	"testing"
 	"time"

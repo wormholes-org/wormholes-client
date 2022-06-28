@@ -2,7 +2,7 @@ package test
 
 import (
 	"fmt"
-	"github.com/wormholes-org/wormholesclient/tools"
+	"github.com/wormholes-org/wormholes-client/tools"
 	"testing"
 )
 

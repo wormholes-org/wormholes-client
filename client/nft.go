@@ -10,7 +10,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/rpc"
-	types2 "github.com/wormholes-org/wormholesclient/types"
+	types2 "github.com/wormholes-org/wormholes-client/types"
 	"log"
 	"math/big"
 	"wormholes-client/tools"

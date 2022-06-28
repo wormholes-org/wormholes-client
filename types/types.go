@@ -26,6 +26,15 @@ const (
 	FtDoesNotAuthorizeExchanges
 	AdditionalPledgeAmount
 	RevokesPledgeAmount
+	VoteOfficialNFT
+	VoteOfficialNFTByApprovedExchanger
+	ChangeRewardsType
+	_
+	_
+	_
+	_
+	_
+	AccountDelegate
 )
 
 // Transaction struct for handling NFT transactions
