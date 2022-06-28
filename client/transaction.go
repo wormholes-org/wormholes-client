@@ -1664,7 +1664,7 @@ func (nft *NFT) VoteOfficialNFTByApprovedExchanger(dir, startIndex string, numbe
 
 	data, err := json.Marshal(transaction)
 	if err != nil {
-		log.Println("格式化wormholes数据失败")
+		log.Println("failed to format wormholes data")
 		return "", err
 	}
 
@@ -1716,7 +1716,7 @@ func (nft *NFT) ChangeRewardsType() (string, error) {
 
 	data, err := json.Marshal(transaction)
 	if err != nil {
-		log.Println("格式化wormholes数据失败")
+		log.Println("failed to format wormholes data")
 		return "", err
 	}
 
@@ -1768,7 +1768,7 @@ func (nft *NFT) AccountDelegate(proxyAddress string) (string, error) {
 
 	data, err := json.Marshal(transaction)
 	if err != nil {
-		log.Println("格式化wormholes数据失败")
+		log.Println("failed to format wormholes data")
 		return "", err
 	}
 
