@@ -151,11 +151,80 @@ func (nft *NFT) NetworkID(ctx context.Context) (*big.Int, error) {
 	return version, nil
 }
 
+// Balance returns the wei balance of the given account in the pending state.
+func (nft *NFT) Balance(ctx context.Context, account string) (*big.Int, error) {
+	var accounts common.Address
+	if account == "" {
+		accounts, _, _ = tools.PriKeyToAddress(nft.priKey)
+	} else {
+		accounts = common.HexToAddress(account)
+	}
+	var result hexutil.Big
+	err := nft.c.CallContext(ctx, &result, "eth_getBalance", accounts, "pending")
+	return (*big.Int)(&result), err
+}
+
+// BalanceAt returns the wei balance of the given account.
+// The block number can be nil, in which case the balance is taken from the latest known block.
+func (nft *NFT) BalanceAt(ctx context.Context, account string, blockNumber *big.Int) (*big.Int, error) {
+	var accounts common.Address
+	if account == "" {
+		accounts, _, _ = tools.PriKeyToAddress(nft.priKey)
+	} else {
+		accounts = common.HexToAddress(account)
+	}
+	var result hexutil.Big
+	err := nft.c.CallContext(ctx, &result, "eth_getBalance", accounts, toBlockNumArg(blockNumber))
+	return (*big.Int)(&result), err
+}
+
+func toBlockNumArg(number *big.Int) string {
+	if number == nil {
+		return "latest"
+	}
+	pending := big.NewInt(-1)
+	if number.Cmp(pending) == 0 {
+		return "pending"
+	}
+	return hexutil.EncodeBig(number)
+}
+
 // TransactionReceipt returns the receipt of a transaction by transaction hash.
 // Note that the receipt is not available for pending transactions.
-func (nft *NFT) TransactionReceipt(ctx context.Context, txHash common.Hash) (*types.Receipt, error) {
+func (nft *NFT) TransactionReceipt(ctx context.Context, txHash string) (*types.Receipt, error) {
+	txHashs := common.HexToHash(txHash)
 	var r *types.Receipt
-	err := nft.c.CallContext(ctx, &r, "eth_getTransactionReceipt", txHash)
+	err := nft.c.CallContext(ctx, &r, "eth_getTransactionReceipt", txHashs)
+	if err == nil {
+		if r == nil {
+			return nil, ethereum.NotFound
+		}
+	}
+	return r, err
+}
+
+func (nft *NFT) GetAccountInfo(ctx context.Context, address string, block int64) (*types2.Account, error) {
+	var addresss common.Address
+	if address == "" {
+		addresss, _, _ = tools.PriKeyToAddress(nft.priKey)
+	} else {
+		addresss = common.HexToAddress(address)
+	}
+	blockNrOrHash := rpc.BlockNumberOrHashWithNumber(rpc.BlockNumber(block))
+	var r *types2.Account
+	err := nft.c.CallContext(ctx, &r, "eth_getAccountInfo", addresss, blockNrOrHash)
+	if err == nil {
+		if r == nil {
+			return nil, ethereum.NotFound
+		}
+	}
+	return r, err
+}
+
+func (nft *NFT) GetBlockBeneficiaryAddressByNumber(ctx context.Context, block int64) (*types2.BeneficiaryAddressList, error) {
+	blockNumber := rpc.BlockNumber(block)
+	var r *types2.BeneficiaryAddressList
+	err := nft.c.CallContext(ctx, &r, "eth_getBlockBeneficiaryAddressByNumber", blockNumber, true)
 	if err == nil {
 		if r == nil {
 			return nil, ethereum.NotFound
@@ -167,7 +236,13 @@ func (nft *NFT) TransactionReceipt(ctx context.Context, txHash common.Hash) (*ty
 func (nft *NFT) QueryMinerProxy(ctx context.Context, number int64, account string) (types2.MinerProxyList, error) {
 	var result types2.MinerProxyList
 	nu := fmt.Sprintf("0x%x", number)
-	err := nft.c.CallContext(ctx, &result, "eth_queryMinerProxy", nu, account)
+	var accounts common.Address
+	if account == "" {
+		accounts, _, _ = tools.PriKeyToAddress(nft.priKey)
+	} else {
+		accounts = common.HexToAddress(account)
+	}
+	err := nft.c.CallContext(ctx, &result, "eth_queryMinerProxy", nu, accounts)
 	if err != nil {
 		return nil, err
 	}
@@ -185,34 +260,7 @@ func (nft *NFT) GetActiveLivePool(ctx context.Context, number uint64) (*types2.A
 	return al, err
 }
 
-func (nft *NFT) GetAccountInfo(ctx context.Context, address common.Address, block int64) (*types2.Account, error) {
-	blockNrOrHash := rpc.BlockNumberOrHashWithNumber(rpc.BlockNumber(block))
-	var r *types2.Account
-	err := nft.c.CallContext(ctx, &r, "eth_getAccountInfo", address, blockNrOrHash)
-	if err == nil {
-		if r == nil {
-			return nil, ethereum.NotFound
-		}
-	}
-
-	return r, err
-}
-
-func (nft *NFT) GetBlockBeneficiaryAddressByNumber(ctx context.Context, block int64) (*types2.BeneficiaryAddressList, error) {
-	blockNumber := rpc.BlockNumber(block)
-	var r *types2.BeneficiaryAddressList
-	err := nft.c.CallContext(ctx, &r, "eth_getBlockBeneficiaryAddressByNumber", blockNumber, true)
-	if err == nil {
-		if r == nil {
-			return nil, ethereum.NotFound
-		}
-	}
-
-	return r, err
-}
-
-func (w *Wallet) sign(data []byte, priKey string) ([]byte, error) {
-	//am := core.StartClefAccountManager("/home/user1/azh/data/node15/keystore", true, false, "") //获取account
+func (w *Wallet) Sign(data []byte, priKey string) ([]byte, error) {
 	key, err := crypto.HexToECDSA(priKey)
 	if err != nil {
 		return nil, err
@@ -235,7 +283,6 @@ func (w *Wallet) sign(data []byte, priKey string) ([]byte, error) {
 //blockNumber: Block height, which means that this transaction is valid before this height, the format is a hexadecimal string
 //seller: Seller's address, formatted as a hexadecimal string
 func (w *Wallet) SignBuyer(amount, nftAddress, exchanger, blockNumber, seller string) ([]byte, error) {
-	//am := core.StartClefAccountManager("/home/user1/azh/data/node15/keystore", true, false, "") //获取account
 	key, err := crypto.HexToECDSA(w.priKey)
 	if err != nil {
 		return nil, err
@@ -272,7 +319,6 @@ func (w *Wallet) SignBuyer(amount, nftAddress, exchanger, blockNumber, seller st
 //	exchanger:	The exchange on which the transaction took place, formatted as a decimal string
 //	blockNumber: Block height, which means that this transaction is valid before this height, the format is a hexadecimal string
 func (w *Wallet) SignSeller1(amount, nftAddress, exchanger, blockNumber string) ([]byte, error) {
-	//am := core.StartClefAccountManager("/home/user1/azh/data/node15/keystore", true, false, "") //获取account
 	key, err := crypto.HexToECDSA(w.priKey)
 	if err != nil {
 		return nil, err
