@@ -73,7 +73,6 @@ func CheckAddress(name, value string) error {
 	if !strings.HasPrefix(value, "0X") && !strings.HasPrefix(value, "0x") {
 		return xerrors.Errorf("%s is not string of 0x", name)
 	}
-
 	if len(value) != 42 {
 		return xerrors.Errorf("the len of %s must be 42", name)
 	}

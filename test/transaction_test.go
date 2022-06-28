@@ -322,3 +322,40 @@ func TestRevokesPledgeAmount(t *testing.T) {
 }
 
 //0xd2c7f943f0f5364b0928c518e7b6de7491c0e8efb6abf912a17e6860f70ebec1
+
+//VoteOfficialNFT
+func TestVoteOfficialNFT(t *testing.T) {
+	worm := client.NewClient(priKey, endpoint)
+	rs, _ := worm.NFT.VoteOfficialNFT("wormholes2", "0x640001", 6553600, 20, "0xab7624f47fd7dadb6b8e255d06a2f10af55990fe")
+	fmt.Println(rs)
+}
+
+//VoteOfficialNFTByApprovedExchanger
+func TestVoteOfficialNFTByApprovedExchanger(t *testing.T) {
+	worm := client.NewClient(exchangerPriKey, "")
+	exchangeAuth, err := worm.Wallet.SignExchanger(exchangeAddress, exchangeAddress1, "0x0")
+	if err != nil {
+		log.Fatalln("Signing failed")
+	}
+
+	fmt.Println(string(exchangeAuth))
+	//worm1 := client.NewClient(priKey, endpoint)
+	//rs, _ := worm1.NFT.VoteOfficialNFTByApprovedExchanger("wormholes2", "0x640001", 6553600, 20, "0xab7624f47fd7dadb6b8e255d06a2f10af55990fe", exchangeAuth)
+	//fmt.Println(rs)
+}
+
+//ChangeRewardsType
+//change revenue model
+func TestChangeRewardsType(t *testing.T) {
+	worm := client.NewClient(priKey, endpoint)
+	rs, _ := worm.NFT.ChangeRewardsType()
+	fmt.Println(rs)
+}
+
+//AccountDelegate
+//Delegate large accounts to small accounts
+func TestAccountDelegate(t *testing.T) {
+	worm := client.NewClient(priKey, endpoint)
+	rs, _ := worm.NFT.AccountDelegate(buyerAddress)
+	fmt.Println(rs)
+}

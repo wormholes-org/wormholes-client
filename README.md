@@ -3,7 +3,7 @@
 - ## Install
 
 ```go
-go get github.com/wormholes-org/wormholesclient
+go get github.com/wormholes-org/wormholes-org/wormholes-client
 ```
 
 - ## Client
@@ -11,7 +11,7 @@ go get github.com/wormholes-org/wormholesclient
     - ### Create a client
 
       Initializing the wormholes client with Go is the basic steps required to interact with the blockchain.
-      Import the wormholesclient package and initialize it by calling the receiving blockchain service provider
+      Import the wormholes-org/wormholes-client package and initialize it by calling the receiving blockchain service provider
       rawurl
 
       ```
@@ -23,7 +23,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
       )
       
       const (
@@ -68,7 +68,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -116,7 +116,7 @@ go get github.com/wormholes-org/wormholesclient
           ```
           package main
           import (
-              "github.com/wormholesclient/client"
+              "github.com/wormholes-org/wormholes-client/client"
               "fmt"
           )
           
@@ -162,7 +162,7 @@ go get github.com/wormholes-org/wormholesclient
           ```
           package main
           import (
-              "github.com/wormholesclient/client"
+              "github.com/wormholes-org/wormholes-client/client"
               "fmt"
           )
           
@@ -206,7 +206,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -252,7 +252,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -293,7 +293,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -333,7 +333,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -373,7 +373,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-           "github.com/wormholesclient/client"
+           "github.com/wormholes-org/wormholes-client/client"
            "fmt"
       )
       
@@ -414,7 +414,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -453,7 +453,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -492,7 +492,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -531,7 +531,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-         "github.com/wormholesclient/client"
+         "github.com/wormholes-org/wormholes-client/client"
          "fmt"
       )
       
@@ -566,7 +566,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -601,7 +601,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -642,7 +642,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -677,7 +677,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -720,7 +720,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -760,7 +760,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
     
@@ -800,7 +800,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -840,7 +840,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -881,7 +881,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -922,7 +922,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -964,7 +964,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -1005,7 +1005,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -1044,7 +1044,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -1083,7 +1083,7 @@ go get github.com/wormholes-org/wormholesclient
       ```
       package main
       import (
-          "github.com/wormholesclient/client"
+          "github.com/wormholes-org/wormholes-client/client"
           "fmt"
       )
       
@@ -1096,5 +1096,47 @@ go get github.com/wormholes-org/wormholesclient
           worm := client.NewNFT(priKey, endpoint)
           rs, _ := worm.NFT.RevokesPledgeAmount(100)
           fmt.Println(rs) //0xd2c7f943f0f5364b0928c518e7b6de7491c0e8efb6abf912a17e6860f70ebec1
+      }
+      ```
+    - ### VoteOfficialNFT
+
+      ```
+      VoteOfficialNFT(dir, startIndex string, number uint64, royalty uint32, creator string) (string, error)
+      ```
+
+      This transaction is used to inject NFT fragments that can be mined by miners. Only official accounts can do this transaction
+
+      **Params**
+
+      > - *dir                    The path address where the SNFT is located, the format is a string*
+      > - *startIndex        The start number of the SNFT fragment, formatted as a hexadecimal string*
+      > - *number           The number of injected SNFT fragments, formatted as a decimal string*
+      > - *royalty             Royalty, formatted as an integer*
+      > - *creator           Creator, format is a hex string*
+
+      **Return**
+
+      `string`  - If the transaction is successful, return the hash of the transaction; if the transaction fails, return nil
+
+      `error`   - If the transaction is successful, return nil; if the transaction fails, return the corresponding error
+
+      **Example**
+
+      ```
+      package main
+      import (
+        "github.com/wormholes-org/wormholes-client/client"
+        "fmt"
+      )
+      
+      const (
+        endpoint = "http://192.168.4.237:8574"
+        priKey   = "b2ebd0889351eb22dc73c3a02c63e783794a9de3f578d6d07bb370cc112d2ec7"
+      )
+    
+      func main() {
+        worm := client.NewClient(priKey, endpoint)
+        rs, _ := worm.NFT.InsertNFTBlock("wormholes2", "0x640001", 6553600, 20, "0xEaE404DCa7c22A15A59f63002Df54BBb8D90c5FB")
+        fmt.Println(rs) //0x61cd018d6e70af47c6204fea18db5b33fdecc92162cca66b0089783733809e84
       }
       ```

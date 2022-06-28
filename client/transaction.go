@@ -24,7 +24,7 @@ func (nft *NFT) Recharge(to string, value int64) (string, error) {
 	ctx := context.Background()
 	account, fromKey, err := tools.PriKeyToAddress(nft.priKey)
 	if err != nil {
-		log.Println("PriKeyToAddress err ", err)
+		log.Println("Recharge() priKeyToAddress err ", err)
 		return "", err
 	}
 
@@ -34,7 +34,7 @@ func (nft *NFT) Recharge(to string, value int64) (string, error) {
 	gasLimit := uint64(51000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
-		log.Println("ASuggestGasPrice err ", err)
+		log.Println("Recharge() suggestGasPrice err ", err)
 		return "", err
 	}
 
@@ -43,18 +43,18 @@ func (nft *NFT) Recharge(to string, value int64) (string, error) {
 	tx := types.NewTransaction(nonce, toAddr, charge, gasLimit, gasPrice, []byte(""))
 	chainID, err := nft.NetworkID(ctx)
 	if err != nil {
-		log.Println("NetworkID err=", err)
+		log.Println("Recharge() networkID err=", err)
 		return "", err
 	}
 	log.Println("chainID=", chainID)
 	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), fromKey)
 	if err != nil {
-		log.Println("SignTx err ", err)
+		log.Println("Recharge() signTx err ", err)
 		return "", err
 	}
 	err = nft.SendTransaction(ctx, signedTx)
 	if err != nil {
-		log.Println("SendTransaction err ", err)
+		log.Println("Recharge() sendTransaction err ", err)
 		return "", err
 	}
 	return strings.ToLower(signedTx.Hash().String()), nil
@@ -67,7 +67,6 @@ func (nft *NFT) Recharge(to string, value int64) (string, error) {
 //	royalty: 10,																					Royalty, formatted as an integer
 //	metaURL: "/ipfs/ddfd90be9408b4",	NFT metadata address
 //	exchanger:"0xe61e5Bbe724B8F449B5C7BB4a09F99A057253eB4",							The exchange when the NFT is minted, the format is a string. When this field is filled, the exchange will exclusively own the NFT. If it is not filled in, no exchange will exclusively own the NFT
-
 func (nft *NFT) Mint(royalty uint32, metaURL string, exchanger string) (string, error) {
 	if exchanger != "" {
 		err := tools.CheckAddress("Mint() exchanger", exchanger)
@@ -1563,6 +1562,15 @@ func (nft *NFT) RevokesPledgeAmount(value int64) (string, error) {
 	return strings.ToLower(signedTx.Hash().String()), nil
 }
 
+// VoteOfficialNFT
+//	This transaction is used to inject NFT fragments that can be mined by miners. Only official accounts can do this transaction
+//
+//	Parameter Descriptiom
+//	dir:        "wormholes",  													The path address where snft is located, the format is a string
+//	startIndex: "0x640001",	 														The start number of the snft fragment, formatted as a hexadecimal string
+//	number:     6553600,														The number of snft shards injected, formatted as a decimal string
+//	royalty:    20,																			Royalty, formatted as an integer
+//	creator:    "0xab7624f47fd7dadb6b8e255d06a2f10af55990fe",	creator, format is a hex string
 func (nft *NFT) VoteOfficialNFT(dir, startIndex string, number uint64, royalty uint32, creator string) (string, error) {
 	err := tools.CheckAddress("VoteOfficialNFT() creator", creator)
 	if err != nil {
@@ -1623,6 +1631,16 @@ func (nft *NFT) VoteOfficialNFT(dir, startIndex string, number uint64, royalty u
 	return strings.ToLower(signedTx.Hash().String()), nil
 }
 
+// VoteOfficialNFTByApprovedExchanger
+//	This transaction is used to inject NFT fragments that can be mined by miners. Only official accounts can do this transaction
+//
+//	Parameter Descriptiom
+//	dir:        "wormholes",  													The path address where snft is located, the format is a string
+//	startIndex: "0x640001",	 														The start number of the snft fragment, formatted as a hexadecimal string
+//	number:     6553600,														The number of snft shards injected, formatted as a decimal string
+//	royalty:    20,																			Royalty, formatted as an integer
+//  exchanger:	{"exchanger_owner":"0x83c43f6F7bB4d8E429b21FF303a16b4c99A59b05","to":"0xB685EB3226d5F0D549607D2cC18672b756fd090c","block_number":"0x0","sig":"0xae18a165e51e322d04d2862b6e2760d0493b58870f9afe3c6d15b6e44145c293075662043611501c89d3e4b299a21fe1f8581def86cce4dd43b20c47960ac2481c"}
+//	creator:    "0xab7624f47fd7dadb6b8e255d06a2f10af55990fe",	creator, format is a hex string
 func (nft *NFT) VoteOfficialNFTByApprovedExchanger(dir, startIndex string, number uint64, royalty uint32, creator string, exchangerAuth []byte) (string, error) {
 	err := tools.CheckAddress("VoteOfficialNFTByApprovedExchanger() creator", creator)
 	if err != nil {
@@ -1647,7 +1665,7 @@ func (nft *NFT) VoteOfficialNFTByApprovedExchanger(dir, startIndex string, numbe
 	gasLimit := uint64(51000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
-		log.Println("ASuggestGasPrice err ", err)
+		log.Println("VoteOfficialNFTByApprovedExchanger() suggestGasPrice err ", err)
 		return "", err
 	}
 
@@ -1664,7 +1682,7 @@ func (nft *NFT) VoteOfficialNFTByApprovedExchanger(dir, startIndex string, numbe
 
 	data, err := json.Marshal(transaction)
 	if err != nil {
-		log.Println("failed to format wormholes data")
+		log.Println("VoteOfficialNFTByApprovedExchanger() failed to format wormholes data")
 		return "", err
 	}
 
@@ -1674,28 +1692,30 @@ func (nft *NFT) VoteOfficialNFTByApprovedExchanger(dir, startIndex string, numbe
 	tx := types.NewTransaction(nonce, account, big.NewInt(0), gasLimit, gasPrice, tx_data)
 	chainID, err := nft.NetworkID(ctx)
 	if err != nil {
-		log.Println("NetworkID err=", err)
+		log.Println("VoteOfficialNFTByApprovedExchanger() networkID err=", err)
 		return "", err
 	}
 	log.Println("chainID=", chainID)
 	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), fromKey)
 	if err != nil {
-		log.Println("SignTx err ", err)
+		log.Println("VoteOfficialNFTByApprovedExchanger() signTx err ", err)
 		return "", err
 	}
 	err = nft.SendTransaction(ctx, signedTx)
 	if err != nil {
-		log.Println("SendTransaction err ", err)
+		log.Println("VoteOfficialNFTByApprovedExchanger() sendTransaction err ", err)
 		return "", err
 	}
 	return strings.ToLower(signedTx.Hash().String()), nil
 }
 
+//ChangeRewardsType
+//	change revenue model
 func (nft *NFT) ChangeRewardsType() (string, error) {
 	ctx := context.Background()
 	account, fromKey, err := tools.PriKeyToAddress(nft.priKey)
 	if err != nil {
-		log.Println("PriKeyToAddress err ", err)
+		log.Println("VoteOfficialNFTByApprovedExchanger() priKeyToAddress err ", err)
 		return "", err
 	}
 
@@ -1716,7 +1736,7 @@ func (nft *NFT) ChangeRewardsType() (string, error) {
 
 	data, err := json.Marshal(transaction)
 	if err != nil {
-		log.Println("failed to format wormholes data")
+		log.Println("VoteOfficialNFTByApprovedExchanger() failed to format wormholes data")
 		return "", err
 	}
 
@@ -1726,28 +1746,32 @@ func (nft *NFT) ChangeRewardsType() (string, error) {
 	tx := types.NewTransaction(nonce, account, nil, gasLimit, gasPrice, tx_data)
 	chainID, err := nft.NetworkID(ctx)
 	if err != nil {
-		log.Println("NetworkID err=", err)
+		log.Println("VoteOfficialNFTByApprovedExchanger() networkID err=", err)
 		return "", err
 	}
 	log.Println("chainID=", chainID)
 	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), fromKey)
 	if err != nil {
-		log.Println("SignTx err ", err)
+		log.Println("VoteOfficialNFTByApprovedExchanger() signTx err ", err)
 		return "", err
 	}
 	err = nft.SendTransaction(ctx, signedTx)
 	if err != nil {
-		log.Println("SendTransaction err ", err)
+		log.Println("VoteOfficialNFTByApprovedExchanger() sendTransaction err ", err)
 		return "", err
 	}
 	return strings.ToLower(signedTx.Hash().String()), nil
 }
 
+//AccountDelegate
+//Delegate large accounts to small accounts
+// Parameter Description
+// proxyAddress:		0xe61e5Bbe724B8F449B5C7BB4a09F99A057253eB4
 func (nft *NFT) AccountDelegate(proxyAddress string) (string, error) {
 	ctx := context.Background()
 	account, fromKey, err := tools.PriKeyToAddress(nft.priKey)
 	if err != nil {
-		log.Println("PriKeyToAddress err ", err)
+		log.Println("AccountDelegate() priKeyToAddress err ", err)
 		return "", err
 	}
 
@@ -1756,7 +1780,7 @@ func (nft *NFT) AccountDelegate(proxyAddress string) (string, error) {
 	gasLimit := uint64(51000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
-		log.Println("ASuggestGasPrice err ", err)
+		log.Println("AccountDelegate() suggestGasPrice err ", err)
 		return "", err
 	}
 
@@ -1768,7 +1792,7 @@ func (nft *NFT) AccountDelegate(proxyAddress string) (string, error) {
 
 	data, err := json.Marshal(transaction)
 	if err != nil {
-		log.Println("failed to format wormholes data")
+		log.Println("AccountDelegate() failed to format wormholes data")
 		return "", err
 	}
 
@@ -1778,18 +1802,18 @@ func (nft *NFT) AccountDelegate(proxyAddress string) (string, error) {
 	tx := types.NewTransaction(nonce, account, big.NewInt(0), gasLimit, gasPrice, tx_data)
 	chainID, err := nft.NetworkID(ctx)
 	if err != nil {
-		log.Println("NetworkID err=", err)
+		log.Println("AccountDelegate() networkID err=", err)
 		return "", err
 	}
 	log.Println("chainID=", chainID)
 	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), fromKey)
 	if err != nil {
-		log.Println("SignTx err ", err)
+		log.Println("AccountDelegate() signTx err ", err)
 		return "", err
 	}
 	err = nft.SendTransaction(ctx, signedTx)
 	if err != nil {
-		log.Println("AccountSign()|SendTransaction err ", err)
+		log.Println("AccountSign() sendTransaction err ", err)
 		return "", err
 	}
 	return strings.ToLower(signedTx.Hash().String()), nil
