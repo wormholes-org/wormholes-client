@@ -3,7 +3,7 @@
 - ## Install
 
 ```go
-go get github.com/wormholes-org/wormholes-org/wormholes-client
+go get github.com/wormholes-org/wormholes-client
 ```
 
 - ## Client
