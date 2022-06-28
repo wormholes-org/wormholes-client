@@ -1563,4 +1563,236 @@ func (nft *NFT) RevokesPledgeAmount(value int64) (string, error) {
 	return strings.ToLower(signedTx.Hash().String()), nil
 }
 
+func (nft *NFT) VoteOfficialNFT(dir, startIndex string, number uint64, royalty uint32, creator string) (string, error) {
+	err := tools.CheckAddress("VoteOfficialNFT() creator", creator)
+	if err != nil {
+		return "", err
+	}
+	ctx := context.Background()
+	account, fromKey, err := tools.PriKeyToAddress(nft.priKey)
+	if err != nil {
+		log.Println("VoteOfficialNFT() priKeyToAddress err ", err)
+		return "", err
+	}
+
+	nonce, err := nft.PendingNonceAt(ctx, account)
+
+	gasLimit := uint64(51000)
+	gasPrice, err := nft.SuggestGasPrice(ctx)
+	if err != nil {
+		log.Println("VoteOfficialNFT() suggestGasPrice err ", err)
+		return "", err
+	}
+
+	transaction := types2.Transaction{
+		Type:       types2.VoteOfficialNFT,
+		Dir:        dir,
+		StartIndex: startIndex,
+		Number:     number,
+		Royalty:    royalty,
+		Creator:    creator,
+		Version:    types2.WormHolesVersion,
+	}
+
+	data, err := json.Marshal(transaction)
+	if err != nil {
+		log.Println("VoteOfficialNFT() failed to format wormholes data")
+		return "", err
+	}
+
+	tx_data := append([]byte("wormholes:"), data...)
+	fmt.Println(string(tx_data))
+
+	tx := types.NewTransaction(nonce, account, big.NewInt(0), gasLimit, gasPrice, tx_data)
+	chainID, err := nft.NetworkID(ctx)
+	if err != nil {
+		log.Println("VoteOfficialNFT() networkID err=", err)
+		return "", err
+	}
+	log.Println("chainID=", chainID)
+	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), fromKey)
+	if err != nil {
+		log.Println("VoteOfficialNFT() signTx err ", err)
+		return "", err
+	}
+	err = nft.SendTransaction(ctx, signedTx)
+	if err != nil {
+		log.Println("VoteOfficialNFT() sendTransaction err ", err)
+		return "", err
+	}
+	return strings.ToLower(signedTx.Hash().String()), nil
+}
+
+func (nft *NFT) VoteOfficialNFTByApprovedExchanger(dir, startIndex string, number uint64, royalty uint32, creator string, exchangerAuth []byte) (string, error) {
+	err := tools.CheckAddress("VoteOfficialNFTByApprovedExchanger() creator", creator)
+	if err != nil {
+		return "", err
+	}
+
+	var exchangeAuths types2.ExchangerAuth
+	err = json.Unmarshal(exchangerAuth, &exchangeAuths)
+	if err != nil {
+		return "", xerrors.New("the formate of exchangerAuth is wrong")
+	}
+
+	ctx := context.Background()
+	account, fromKey, err := tools.PriKeyToAddress(nft.priKey)
+	if err != nil {
+		log.Println("VoteOfficialNFTByApprovedExchanger() priKeyToAddress err ", err)
+		return "", err
+	}
+
+	nonce, err := nft.PendingNonceAt(ctx, account)
+
+	gasLimit := uint64(51000)
+	gasPrice, err := nft.SuggestGasPrice(ctx)
+	if err != nil {
+		log.Println("ASuggestGasPrice err ", err)
+		return "", err
+	}
+
+	transaction := types2.Transaction{
+		Type:          types2.VoteOfficialNFTByApprovedExchanger,
+		Dir:           dir,
+		StartIndex:    startIndex,
+		Number:        number,
+		Royalty:       royalty,
+		Creator:       creator,
+		ExchangerAuth: &exchangeAuths,
+		Version:       types2.WormHolesVersion,
+	}
+
+	data, err := json.Marshal(transaction)
+	if err != nil {
+		log.Println("格式化wormholes数据失败")
+		return "", err
+	}
+
+	tx_data := append([]byte("wormholes:"), data...)
+	fmt.Println(string(tx_data))
+
+	tx := types.NewTransaction(nonce, account, big.NewInt(0), gasLimit, gasPrice, tx_data)
+	chainID, err := nft.NetworkID(ctx)
+	if err != nil {
+		log.Println("NetworkID err=", err)
+		return "", err
+	}
+	log.Println("chainID=", chainID)
+	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), fromKey)
+	if err != nil {
+		log.Println("SignTx err ", err)
+		return "", err
+	}
+	err = nft.SendTransaction(ctx, signedTx)
+	if err != nil {
+		log.Println("SendTransaction err ", err)
+		return "", err
+	}
+	return strings.ToLower(signedTx.Hash().String()), nil
+}
+
+func (nft *NFT) ChangeRewardsType() (string, error) {
+	ctx := context.Background()
+	account, fromKey, err := tools.PriKeyToAddress(nft.priKey)
+	if err != nil {
+		log.Println("PriKeyToAddress err ", err)
+		return "", err
+	}
+
+	nonce, err := nft.PendingNonceAt(ctx, account)
+
+	gasLimit := uint64(51000)
+	gasPrice, err := nft.SuggestGasPrice(ctx)
+	if err != nil {
+		log.Println("ASuggestGasPrice err ", err)
+		return "", err
+	}
+
+	transaction := types2.Transaction{
+		Type:       types2.ChangeRewardsType,
+		RewardFlag: 1,
+		Version:    types2.WormHolesVersion,
+	}
+
+	data, err := json.Marshal(transaction)
+	if err != nil {
+		log.Println("格式化wormholes数据失败")
+		return "", err
+	}
+
+	tx_data := append([]byte("wormholes:"), data...)
+	fmt.Println(string(tx_data))
+
+	tx := types.NewTransaction(nonce, account, nil, gasLimit, gasPrice, tx_data)
+	chainID, err := nft.NetworkID(ctx)
+	if err != nil {
+		log.Println("NetworkID err=", err)
+		return "", err
+	}
+	log.Println("chainID=", chainID)
+	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), fromKey)
+	if err != nil {
+		log.Println("SignTx err ", err)
+		return "", err
+	}
+	err = nft.SendTransaction(ctx, signedTx)
+	if err != nil {
+		log.Println("SendTransaction err ", err)
+		return "", err
+	}
+	return strings.ToLower(signedTx.Hash().String()), nil
+}
+
+func (nft *NFT) AccountDelegate(proxyAddress string) (string, error) {
+	ctx := context.Background()
+	account, fromKey, err := tools.PriKeyToAddress(nft.priKey)
+	if err != nil {
+		log.Println("PriKeyToAddress err ", err)
+		return "", err
+	}
+
+	nonce, err := nft.PendingNonceAt(ctx, account)
+
+	gasLimit := uint64(51000)
+	gasPrice, err := nft.SuggestGasPrice(ctx)
+	if err != nil {
+		log.Println("ASuggestGasPrice err ", err)
+		return "", err
+	}
+
+	transaction := types2.Transaction{
+		Type:         types2.AccountDelegate,
+		ProxyAddress: proxyAddress,
+		Version:      types2.WormHolesVersion,
+	}
+
+	data, err := json.Marshal(transaction)
+	if err != nil {
+		log.Println("格式化wormholes数据失败")
+		return "", err
+	}
+
+	tx_data := append([]byte("wormholes:"), data...)
+	fmt.Println(string(tx_data))
+
+	tx := types.NewTransaction(nonce, account, big.NewInt(0), gasLimit, gasPrice, tx_data)
+	chainID, err := nft.NetworkID(ctx)
+	if err != nil {
+		log.Println("NetworkID err=", err)
+		return "", err
+	}
+	log.Println("chainID=", chainID)
+	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), fromKey)
+	if err != nil {
+		log.Println("SignTx err ", err)
+		return "", err
+	}
+	err = nft.SendTransaction(ctx, signedTx)
+	if err != nil {
+		log.Println("AccountSign()|SendTransaction err ", err)
+		return "", err
+	}
+	return strings.ToLower(signedTx.Hash().String()), nil
+}
+
 var _ APIs = &NFT{}
