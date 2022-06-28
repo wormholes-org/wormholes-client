@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/ethereum/go-ethereum v1.10.19
-	github.com/wormholes-org/wormholes-client v1.2.2
+	github.com/wormholes-org/wormholes-client v1.2.1
 	golang.org/x/crypto v0.0.0-20220525230936-793ad666bf5e
 	golang.org/x/xerrors v0.0.0-20220609144429-65e65417b02f
 )
