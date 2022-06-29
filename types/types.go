@@ -56,8 +56,8 @@ type Transaction struct {
 	Seller2       *Seller2       `json:"seller2,omitempty"`
 	ExchangerAuth *ExchangerAuth `json:"exchanger_auth,omitempty"`
 	Creator       string         `json:"creator,omitempty"`
-	RewardFlag    int            `json:"reward_flag"`
-	ProxyAddress  string         `json:"proxy_address"`
+	RewardFlag    int            `json:"reward_flag,omitempty"`
+	ProxyAddress  string         `json:"proxy_address,omitempty"`
 	Version       string         `json:"version"`
 }
 
