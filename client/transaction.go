@@ -745,6 +745,7 @@ func (nft *NFT) Close() (string, error) {
 }
 
 // InsertNFTBlock
+// Deprecated: use VoteOfficialNFT instead.
 //	This transaction is used to inject NFT fragments that can be mined by miners. Only official accounts can do this transaction
 //
 //	Parameter Descriptiom
