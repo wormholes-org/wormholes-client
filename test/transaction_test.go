@@ -339,7 +339,7 @@ func TestVoteOfficialNFTByApprovedExchanger(t *testing.T) {
 	}
 
 	fmt.Println(string(exchangeAuth))
-	worm1 := client.NewClient(priKey, endpoint)
+	worm1 := client.NewClient(exchangeAddress1, endpoint)
 	rs, _ := worm1.NFT.VoteOfficialNFTByApprovedExchanger("wormholes2", "0x640001", 6553600, 20, "0xab7624f47fd7dadb6b8e255d06a2f10af55990fe", exchangeAuth)
 	fmt.Println(rs)
 }
