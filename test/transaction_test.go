@@ -174,7 +174,7 @@ func TestTransactionNFT(t *testing.T) {
 
 //BuyerInitiatingTransaction 15
 func TestBuyerInitiatingTransaction(t *testing.T) {
-	worm := client.NewClient(sellerPriKey, "")
+	worm := client.NewClient(sellerPriKey, endpoint)
 	number, _ := worm.NFT.BlockNumber(context.Background())
 	blockNumber := fmt.Sprintf("0x%x", number+10)
 	seller1, err := worm.Wallet.SignSeller1("0x38D7EA4C68000", "0x0000000000000000000000000000000000000003", "0x8b07aff2327a3B7e2876D899caFac99f7AE16B10", blockNumber)
