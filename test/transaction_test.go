@@ -155,7 +155,7 @@ func TestInsertNFTBlock(t *testing.T) {
 
 //TransactionNFT 14
 func TestTransactionNFT(t *testing.T) {
-	worm := client.NewClient(buyerPriKey, "")
+	worm := client.NewClient(buyerPriKey, endpoint)
 	number, _ := worm.NFT.BlockNumber(context.Background())
 	blockNumber := fmt.Sprintf("0x%x", number+10)
 	buyer, err := worm.Wallet.SignBuyer("0xde0b6b3a7640000", "0x0000000000000000000000000000000000000002", "0x8b07aff2327a3B7e2876D899caFac99f7AE16B10", blockNumber, "")
@@ -174,10 +174,8 @@ func TestTransactionNFT(t *testing.T) {
 
 //BuyerInitiatingTransaction 15
 func TestBuyerInitiatingTransaction(t *testing.T) {
-	worm := client.NewClient(sellerPriKey, endpoint)
-	number, _ := worm.NFT.BlockNumber(context.Background())
-	blockNumber := fmt.Sprintf("0x%x", number+10)
-	seller1, err := worm.Wallet.SignSeller1("0x38D7EA4C68000", "0x0000000000000000000000000000000000000003", "0x8b07aff2327a3B7e2876D899caFac99f7AE16B10", blockNumber)
+	worm := client.NewClient(sellerPriKey, "")
+	seller1, err := worm.Wallet.SignSeller1("0x38D7EA4C68000", "0x0000000000000000000000000000000000000003", "0x8b07aff2327a3B7e2876D899caFac99f7AE16B10", "0x677")
 	if err != nil {
 		log.Fatalln("Signing failed")
 	}
