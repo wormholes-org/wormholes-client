@@ -23,7 +23,7 @@ func TestGetAccountInfo(t *testing.T) {
 	n := rand.Intn(len(*rs))
 	fmt.Println("Address", (*rs)[n].Address.String())
 	fmt.Println("NFTAddress", (*rs)[n].NftAddress.String())
-	rs1, _ := nft.NFT.GetAccountInfo(ctx, (*rs)[n].NftAddress, int64(blockNumber))
+	rs1, _ := nft.NFT.GetAccountInfo(ctx, (*rs)[n].NftAddress.String(), int64(blockNumber))
 	rss1, _ = json.Marshal(*rs1)
 	fmt.Println(string(rss1))
 }
