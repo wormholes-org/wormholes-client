@@ -83,7 +83,7 @@ func (nft *NFT) Mint(royalty uint32, metaURL string, exchanger string) (string, 
 
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(100000)
+	gasLimit := uint64(60000)
 	//gasPrice := big.NewInt(50000000000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
@@ -152,7 +152,7 @@ func (nft *NFT) Transfer(nftAddress, to string) (string, error) {
 
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(50000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("Transfer() suggestGasPrice err ", err)
@@ -219,7 +219,7 @@ func (nft *NFT) Author(nftAddress, to string) (string, error) {
 
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(50000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("Author() suggestGasPrice err ", err)
@@ -286,7 +286,7 @@ func (nft *NFT) AuthorRevoke(nftAddress, to string) (string, error) {
 
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(50000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("AuthorRevoke suggestGasPrice err ", err)
@@ -347,7 +347,7 @@ func (nft *NFT) AccountAuthor(to string) (string, error) {
 
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(50000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("AccountAuthor() suggestGasPrice err ", err)
@@ -408,7 +408,7 @@ func (nft *NFT) AccountAuthorRevoke(to string) (string, error) {
 
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(50000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("AccountAuthorRevoke() suggestGasPrice err ", err)
@@ -474,7 +474,7 @@ func (nft *NFT) SNFTToERB(nftAddress string) (string, error) {
 
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(50000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("SNFTToERB() suggestGasPrice err ", err)
@@ -528,7 +528,7 @@ func (nft *NFT) TokenPledge() (string, error) {
 
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(70000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("TokenPledge() suggestGasPrice err ", err)
@@ -583,7 +583,7 @@ func (nft *NFT) TokenRevokesPledge() (string, error) {
 
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(50000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("TokenRevokesPledge() suggestGasPrice err ", err)
@@ -644,7 +644,7 @@ func (nft *NFT) Open(feeRate uint32, name, url string) (string, error) {
 
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(60000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("Open() suggestGasPrice err ", err)
@@ -703,7 +703,7 @@ func (nft *NFT) Close() (string, error) {
 
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(60000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("close() suggestGasPrice err ", err)
@@ -848,7 +848,7 @@ func (nft *NFT) TransactionNFT(buyer []byte, to string) (string, error) {
 
 	toAddr := common.HexToAddress(to)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(100000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("TransactionNFT() suggestGasPrice err ", err)
@@ -925,7 +925,7 @@ func (nft *NFT) BuyerInitiatingTransaction(seller1 []byte) (string, error) {
 	ctx := context.Background()
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(100000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("BuyerInitiatingTransaction() suggestGasPrice err ", err)
@@ -999,7 +999,7 @@ func (nft *NFT) FoundryTradeBuyer(seller2 []byte) (string, error) {
 	ctx := context.Background()
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(101000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("FoundryTradeBuyer() suggestGasPrice err ", err)
@@ -1100,7 +1100,7 @@ func (nft *NFT) FoundryExchange(buyer, seller2 []byte, to string) (string, error
 
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(140000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("FoundryExchange() suggestGasPrice err ", err)
@@ -1188,7 +1188,7 @@ func (nft *NFT) NftExchangeMatch(buyer, exchangerAuth []byte, to string) (string
 	ctx := context.Background()
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(140000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("NftExchangeMatch() suggestGasPrice err ", err)
@@ -1312,7 +1312,7 @@ func (nft *NFT) FoundryExchangeInitiated(buyer, seller2, exchangerAuth []byte, t
 
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(170000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("FoundryExchangeInitiated() suggestGasPrice err ", err)
@@ -1408,7 +1408,7 @@ func (nft *NFT) FtDoesNotAuthorizeExchanges(buyer, seller1 []byte, to string) (s
 	ctx := context.Background()
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(130000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("FtDoesNotAuthorizeExchanges() suggestGasPrice err ", err)
@@ -1466,7 +1466,7 @@ func (nft *NFT) AdditionalPledgeAmount(value int64) (string, error) {
 	ctx := context.Background()
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(55000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("AdditionalPledgeAmount() suggestGasPrice err ", err)
@@ -1522,7 +1522,7 @@ func (nft *NFT) RevokesPledgeAmount(value int64) (string, error) {
 	ctx := context.Background()
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(55000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("RevokesPledgeAmount() suggestGasPrice err ", err)
@@ -1586,7 +1586,7 @@ func (nft *NFT) VoteOfficialNFT(dir, startIndex string, number uint64, royalty u
 
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(60000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("VoteOfficialNFT() suggestGasPrice err ", err)
@@ -1663,7 +1663,7 @@ func (nft *NFT) VoteOfficialNFTByApprovedExchanger(dir, startIndex string, numbe
 
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(60000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("VoteOfficialNFTByApprovedExchanger() suggestGasPrice err ", err)
@@ -1722,7 +1722,7 @@ func (nft *NFT) ChangeRewardsType() (string, error) {
 
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(50000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("ASuggestGasPrice err ", err)
@@ -1778,7 +1778,7 @@ func (nft *NFT) AccountDelegate(proxyAddress string) (string, error) {
 
 	nonce, err := nft.PendingNonceAt(ctx, account)
 
-	gasLimit := uint64(51000)
+	gasLimit := uint64(70000)
 	gasPrice, err := nft.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("AccountDelegate() suggestGasPrice err ", err)
