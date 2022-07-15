@@ -1,7 +1,6 @@
 package client
 
 type APIs interface {
-	Recharge(to string, value int64) (string, error)
 	Mint(royalty uint32, metaURL string, exchanger string) (string, error)
 	Transfer(nftAddress, to string) (string, error)
 	Author(nftAddress, to string) (string, error)

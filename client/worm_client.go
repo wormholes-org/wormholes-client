@@ -16,56 +16,47 @@ import (
 	"math/big"
 )
 
-type WormClient struct {
-	NFT    NFT
-	Wallet Wallet
-}
-
-type NFT struct {
-	c      *rpc.Client
-	priKey string
-}
-
 type Wallet struct {
 	priKey string
 }
 
-//NewClient creates a new NFT for the given URL and priKey.
+type Wormholes struct {
+	Wallet
+	c *rpc.Client
+}
+
+// NewClient creates a new wormclient for the given URL and priKey.
 //when the rawurl is  nil, Initialize the wallet, can sign buyer, seller, exchange information.
 //when the rawurl is not nil, Initialize the NFT, can carry out nft related transactions.
-func NewClient(priKey, rawurl string) *WormClient {
+func NewClient(priKey, rawurl string) *Wormholes {
 	if rawurl == "" {
-		return &WormClient{
-			Wallet: Wallet{
-				priKey: priKey,
-			},
+		return &Wormholes{
+			Wallet{priKey: priKey},
+			nil,
 		}
 	} else {
 		client, err := rpc.Dial(rawurl)
 		if err != nil {
 			log.Fatalf("failed to connect to Ethereum node: %v", err)
-			return nil
+			return &Wormholes{}
 		}
-		return &WormClient{
-			NFT: NFT{
-				c:      client,
+		return &Wormholes{
+			Wallet{
 				priKey: priKey,
 			},
-			Wallet: Wallet{
-				priKey: priKey,
-			},
+			client,
 		}
 	}
 }
 
-func (nft *NFT) CloseConnect() {
-	nft.c.Close()
+func (worm *Wormholes) CloseConnect() {
+	worm.c.Close()
 }
 
 // ChainID retrieves the current chain ID for transaction replay protection.
-func (nft *NFT) ChainID(ctx context.Context) (*big.Int, error) {
+func (worm *Wormholes) ChainID(ctx context.Context) (*big.Int, error) {
 	var result hexutil.Big
-	err := nft.c.CallContext(ctx, &result, "eth_chainId")
+	err := worm.c.CallContext(ctx, &result, "eth_chainId")
 	if err != nil {
 		return nil, err
 	}
@@ -73,9 +64,9 @@ func (nft *NFT) ChainID(ctx context.Context) (*big.Int, error) {
 }
 
 // BlockNumber returns the most recent block number
-func (nft *NFT) BlockNumber(ctx context.Context) (uint64, error) {
+func (worm *Wormholes) BlockNumber(ctx context.Context) (uint64, error) {
 	var result hexutil.Uint64
-	err := nft.c.CallContext(ctx, &result, "eth_blockNumber")
+	err := worm.c.CallContext(ctx, &result, "eth_blockNumber")
 	return uint64(result), err
 }
 
@@ -91,9 +82,9 @@ type txExtraInfo struct {
 }
 
 // TransactionInBlock returns a single transaction at index in the given block.
-func (nft *NFT) TransactionInBlock(ctx context.Context, blockHash common.Hash, index uint) (*types.Transaction, error) {
+func (worm *Wormholes) TransactionInBlock(ctx context.Context, blockHash common.Hash, index uint) (*types.Transaction, error) {
 	var json *rpcTransaction
-	err := nft.c.CallContext(ctx, &json, "eth_getTransactionByBlockHashAndIndex", blockHash, hexutil.Uint64(index))
+	err := worm.c.CallContext(ctx, &json, "eth_getTransactionByBlockHashAndIndex", blockHash, hexutil.Uint64(index))
 	if err != nil {
 		return nil, err
 	}
@@ -110,17 +101,17 @@ func (nft *NFT) TransactionInBlock(ctx context.Context, blockHash common.Hash, i
 
 // PendingNonceAt returns the account nonce of the given account in the pending state.
 // This is the nonce that should be used for the next transaction.
-func (nft *NFT) PendingNonceAt(ctx context.Context, account common.Address) (uint64, error) {
+func (worm *Wormholes) PendingNonceAt(ctx context.Context, account common.Address) (uint64, error) {
 	var result hexutil.Uint64
-	err := nft.c.CallContext(ctx, &result, "eth_getTransactionCount", account, "pending")
+	err := worm.c.CallContext(ctx, &result, "eth_getTransactionCount", account, "pending")
 	return uint64(result), err
 }
 
 // SuggestGasPrice retrieves the currently suggested gas price to allow a timely
 // execution of a transaction.
-func (nft *NFT) SuggestGasPrice(ctx context.Context) (*big.Int, error) {
+func (worm *Wormholes) SuggestGasPrice(ctx context.Context) (*big.Int, error) {
 	var hex hexutil.Big
-	if err := nft.c.CallContext(ctx, &hex, "eth_gasPrice"); err != nil {
+	if err := worm.c.CallContext(ctx, &hex, "eth_gasPrice"); err != nil {
 		return nil, err
 	}
 	return (*big.Int)(&hex), nil
@@ -130,19 +121,19 @@ func (nft *NFT) SuggestGasPrice(ctx context.Context) (*big.Int, error) {
 //
 // If the transaction was a contract creation use the TransactionReceipt method to get the
 // contract address after the transaction has been mined.
-func (nft *NFT) SendTransaction(ctx context.Context, tx *types.Transaction) error {
+func (worm *Wormholes) SendTransaction(ctx context.Context, tx *types.Transaction) error {
 	data, err := tx.MarshalBinary()
 	if err != nil {
 		return err
 	}
-	return nft.c.CallContext(ctx, nil, "eth_sendRawTransaction", hexutil.Encode(data))
+	return worm.c.CallContext(ctx, nil, "eth_sendRawTransaction", hexutil.Encode(data))
 }
 
 // NetworkID returns the network ID (also known as the chain ID) for this chain.
-func (nft *NFT) NetworkID(ctx context.Context) (*big.Int, error) {
+func (worm *Wormholes) NetworkID(ctx context.Context) (*big.Int, error) {
 	version := new(big.Int)
 	var ver string
-	if err := nft.c.CallContext(ctx, &ver, "net_version"); err != nil {
+	if err := worm.c.CallContext(ctx, &ver, "net_version"); err != nil {
 		return nil, err
 	}
 	if _, ok := version.SetString(ver, 10); !ok {
@@ -152,29 +143,21 @@ func (nft *NFT) NetworkID(ctx context.Context) (*big.Int, error) {
 }
 
 // Balance returns the wei balance of the given account in the pending state.
-func (nft *NFT) Balance(ctx context.Context, account string) (*big.Int, error) {
+func (worm *Wormholes) Balance(ctx context.Context, account string) (*big.Int, error) {
 	var accounts common.Address
-	if account == "" {
-		accounts, _, _ = tools.PriKeyToAddress(nft.priKey)
-	} else {
-		accounts = common.HexToAddress(account)
-	}
+	accounts = common.HexToAddress(account)
 	var result hexutil.Big
-	err := nft.c.CallContext(ctx, &result, "eth_getBalance", accounts, "pending")
+	err := worm.c.CallContext(ctx, &result, "eth_getBalance", accounts, "pending")
 	return (*big.Int)(&result), err
 }
 
 // BalanceAt returns the wei balance of the given account.
 // The block number can be nil, in which case the balance is taken from the latest known block.
-func (nft *NFT) BalanceAt(ctx context.Context, account string, blockNumber *big.Int) (*big.Int, error) {
+func (worm *Wormholes) BalanceAt(ctx context.Context, account string, blockNumber *big.Int) (*big.Int, error) {
 	var accounts common.Address
-	if account == "" {
-		accounts, _, _ = tools.PriKeyToAddress(nft.priKey)
-	} else {
-		accounts = common.HexToAddress(account)
-	}
+	accounts = common.HexToAddress(account)
 	var result hexutil.Big
-	err := nft.c.CallContext(ctx, &result, "eth_getBalance", accounts, toBlockNumArg(blockNumber))
+	err := worm.c.CallContext(ctx, &result, "eth_getBalance", accounts, toBlockNumArg(blockNumber))
 	return (*big.Int)(&result), err
 }
 
@@ -191,10 +174,10 @@ func toBlockNumArg(number *big.Int) string {
 
 // TransactionReceipt returns the receipt of a transaction by transaction hash.
 // Note that the receipt is not available for pending transactions.
-func (nft *NFT) TransactionReceipt(ctx context.Context, txHash string) (*types.Receipt, error) {
+func (worm *Wormholes) TransactionReceipt(ctx context.Context, txHash string) (*types.Receipt, error) {
 	txHashs := common.HexToHash(txHash)
 	var r *types.Receipt
-	err := nft.c.CallContext(ctx, &r, "eth_getTransactionReceipt", txHashs)
+	err := worm.c.CallContext(ctx, &r, "eth_getTransactionReceipt", txHashs)
 	if err == nil {
 		if r == nil {
 			return nil, ethereum.NotFound
@@ -203,16 +186,12 @@ func (nft *NFT) TransactionReceipt(ctx context.Context, txHash string) (*types.R
 	return r, err
 }
 
-func (nft *NFT) GetAccountInfo(ctx context.Context, address string, block int64) (*types2.Account, error) {
+func (worm *Wormholes) GetAccountInfo(ctx context.Context, address string, block int64) (*types2.Account, error) {
 	var addresss common.Address
-	if address == "" {
-		addresss, _, _ = tools.PriKeyToAddress(nft.priKey)
-	} else {
-		addresss = common.HexToAddress(address)
-	}
+	addresss = common.HexToAddress(address)
 	blockNrOrHash := rpc.BlockNumberOrHashWithNumber(rpc.BlockNumber(block))
 	var r *types2.Account
-	err := nft.c.CallContext(ctx, &r, "eth_getAccountInfo", addresss, blockNrOrHash)
+	err := worm.c.CallContext(ctx, &r, "eth_getAccountInfo", addresss, blockNrOrHash)
 	if err == nil {
 		if r == nil {
 			return nil, ethereum.NotFound
@@ -221,10 +200,10 @@ func (nft *NFT) GetAccountInfo(ctx context.Context, address string, block int64)
 	return r, err
 }
 
-func (nft *NFT) GetBlockBeneficiaryAddressByNumber(ctx context.Context, block int64) (*types2.BeneficiaryAddressList, error) {
+func (worm *Wormholes) GetBlockBeneficiaryAddressByNumber(ctx context.Context, block int64) (*types2.BeneficiaryAddressList, error) {
 	blockNumber := rpc.BlockNumber(block)
 	var r *types2.BeneficiaryAddressList
-	err := nft.c.CallContext(ctx, &r, "eth_getBlockBeneficiaryAddressByNumber", blockNumber, true)
+	err := worm.c.CallContext(ctx, &r, "eth_getBlockBeneficiaryAddressByNumber", blockNumber, true)
 	if err == nil {
 		if r == nil {
 			return nil, ethereum.NotFound
@@ -233,26 +212,24 @@ func (nft *NFT) GetBlockBeneficiaryAddressByNumber(ctx context.Context, block in
 	return r, err
 }
 
-func (nft *NFT) QueryMinerProxy(ctx context.Context, number int64, account string) (types2.MinerProxyList, error) {
+func (worm *Wormholes) QueryMinerProxy(ctx context.Context, number int64, account string) (types2.MinerProxyList, error) {
 	var result types2.MinerProxyList
 	nu := fmt.Sprintf("0x%x", number)
 	var accounts common.Address
-	if account == "" {
-		accounts, _, _ = tools.PriKeyToAddress(nft.priKey)
-	} else {
-		accounts = common.HexToAddress(account)
-	}
-	err := nft.c.CallContext(ctx, &result, "eth_queryMinerProxy", nu, accounts)
+
+	accounts = common.HexToAddress(account)
+
+	err := worm.c.CallContext(ctx, &result, "eth_queryMinerProxy", nu, accounts)
 	if err != nil {
 		return nil, err
 	}
 	return result, err
 }
 
-func (nft *NFT) GetActiveLivePool(ctx context.Context, number uint64) (*types2.ActiveMinerList, error) {
+func (worm *Wormholes) GetActiveLivePool(ctx context.Context, number uint64) (*types2.ActiveMinerList, error) {
 	var al *types2.ActiveMinerList
 	nu := rpc.BlockNumber(number)
-	err := nft.c.CallContext(ctx, &al, "eth_getActiveLivePool", nu)
+	err := worm.c.CallContext(ctx, &al, "eth_getActiveLivePool", nu)
 	if err != nil {
 		return nil, err
 	}
