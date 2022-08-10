@@ -107,7 +107,7 @@ func TestSNFTToERB(t *testing.T) {
 //ERB pledge 9
 func TestTokenPledge(t *testing.T) {
 	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.TokenPledge()
+	rs, _ := worm.TokenPledge([]byte(""), "")
 	fmt.Println(rs)
 }
 
@@ -235,14 +235,20 @@ func TestNftExchangeMatch(t *testing.T) {
 		log.Fatalln("Signing failed")
 	}
 
-	worm1 := client.NewClient(exchangerPriKey, "")
-	exchangeAuth, err := worm1.Wallet.SignExchanger(exchangeAddress, exchangeAddress1, "0xa")
+	worm1 := client.NewClient(sellerPriKey, "")
+	seller, err := worm1.Wallet.SignSeller1("0xde0b6b3a7640000", "0x0000000000000000000000000000000000000004", exchangeAddress, "0xa")
 	if err != nil {
 		log.Fatalln("Signing failed")
 	}
 
-	worm2 := client.NewClient(exchangerPriKey1, endpoint)
-	rs, _ := worm2.NftExchangeMatch(buyer, exchangeAuth, buyerAddress)
+	worm2 := client.NewClient(exchangerPriKey, "")
+	exchangeAuth, err := worm2.Wallet.SignExchanger(exchangeAddress, exchangeAddress1, "0xa")
+	if err != nil {
+		log.Fatalln("Signing failed")
+	}
+
+	worm3 := client.NewClient(exchangerPriKey1, endpoint)
+	rs, _ := worm3.NftExchangeMatch(buyer, seller, exchangeAuth, buyerAddress)
 	fmt.Println(rs)
 }
 
@@ -282,7 +288,7 @@ func TestFoundryExchangeInitiated(t *testing.T) {
 //0xc9cc570057faf1edd83f48833520f9d546e4972083ee705152b5f35630f1588d
 
 //FtDoesNotAuthorizeExchanges 20
-func TestFtDoesNotAuthorizeExchanges(t *testing.T) {
+func TestNFTDoesNotAuthorizeExchanges(t *testing.T) {
 	worm := client.NewClient(buyerPriKey, "")
 	buyer, err := worm.Wallet.SignBuyer("0xde0b6b3a7640000", "0x0000000000000000000000000000000000000001", exchangeAddress, "0xa", "")
 	if err != nil {
@@ -297,7 +303,7 @@ func TestFtDoesNotAuthorizeExchanges(t *testing.T) {
 
 	worm2 := client.NewClient(exchangerPriKey, endpoint)
 
-	rs, _ := worm2.FtDoesNotAuthorizeExchanges(buyer, seller1, buyerAddress)
+	rs, _ := worm2.NFTDoesNotAuthorizeExchanges(buyer, seller1, buyerAddress)
 	fmt.Println(rs)
 }
 
@@ -354,6 +360,7 @@ func TestChangeRewardsType(t *testing.T) {
 //Delegate large accounts to small accounts
 func TestAccountDelegate(t *testing.T) {
 	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.AccountDelegate(buyerAddress)
+	proxySign, _ := worm.Wallet.SignDelegate("address", "pledgeAccount")
+	rs, _ := worm.AccountDelegate(proxySign, buyerAddress)
 	fmt.Println(rs)
 }

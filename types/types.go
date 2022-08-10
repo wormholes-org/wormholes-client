@@ -58,6 +58,7 @@ type Transaction struct {
 	Creator       string         `json:"creator,omitempty"`
 	RewardFlag    int            `json:"reward_flag,omitempty"`
 	ProxyAddress  string         `json:"proxy_address,omitempty"`
+	ProxySign     string         `json:"proxy_sign,omitempty"`
 	Version       string         `json:"version"`
 }
 

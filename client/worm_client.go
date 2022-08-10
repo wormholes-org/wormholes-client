@@ -395,3 +395,19 @@ func (w *Wallet) SignExchanger(exchangerOwner, to, blockNumber string) ([]byte, 
 	}
 	return result, nil
 }
+
+func (w *Wallet) SignDelegate(address, pledgeAcoount string) ([]byte, error) {
+	key, err := crypto.HexToECDSA(w.priKey)
+	if err != nil {
+		return nil, err
+	}
+
+	msg := address + pledgeAcoount
+	signature, err := crypto.Sign(tools.SignHash([]byte(msg)), key)
+	if err != nil {
+		return nil, err
+	}
+
+	signature[64] += 27
+	return []byte(hexutil.Encode(signature)), nil
+}

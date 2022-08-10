@@ -24,7 +24,7 @@ func (worm *Wormholes) NormalTransaction(to string, value int64, data string) (s
 	ctx := context.Background()
 	account, fromKey, err := tools.PriKeyToAddress(worm.priKey)
 	if err != nil {
-		log.Println("Recharge() priKeyToAddress err ", err)
+		log.Println("NormalTransaction() priKeyToAddress err ", err)
 		return "", err
 	}
 
@@ -34,7 +34,7 @@ func (worm *Wormholes) NormalTransaction(to string, value int64, data string) (s
 	gasLimit := uint64(51000)
 	gasPrice, err := worm.SuggestGasPrice(ctx)
 	if err != nil {
-		log.Println("Recharge() suggestGasPrice err ", err)
+		log.Println("NormalTransaction() suggestGasPrice err ", err)
 		return "", err
 	}
 
@@ -43,18 +43,18 @@ func (worm *Wormholes) NormalTransaction(to string, value int64, data string) (s
 	tx := types.NewTransaction(nonce, toAddr, charge, gasLimit, gasPrice, []byte(data))
 	chainID, err := worm.NetworkID(ctx)
 	if err != nil {
-		log.Println("Recharge() networkID err=", err)
+		log.Println("NormalTransaction() networkID err=", err)
 		return "", err
 	}
 	log.Println("chainID=", chainID)
 	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), fromKey)
 	if err != nil {
-		log.Println("Recharge() signTx err ", err)
+		log.Println("NormalTransaction() signTx err ", err)
 		return "", err
 	}
 	err = worm.SendTransaction(ctx, signedTx)
 	if err != nil {
-		log.Println("Recharge() sendTransaction err ", err)
+		log.Println("NormalTransaction() sendTransaction err ", err)
 		return "", err
 	}
 	return strings.ToLower(signedTx.Hash().String()), nil
@@ -518,7 +518,7 @@ func (worm *Wormholes) SNFTToERB(wormAddress string) (string, error) {
 
 // TokenPledge
 //	When a user wants to become a miner, he needs to do an ERB pledge transaction first to pledge the ERB needed to become a miner
-func (worm *Wormholes) TokenPledge() (string, error) {
+func (worm *Wormholes) TokenPledge(proxySign []byte, proxyAddress string) (string, error) {
 	ctx := context.Background()
 	account, fromKey, err := tools.PriKeyToAddress(worm.priKey)
 	if err != nil {
@@ -536,8 +536,10 @@ func (worm *Wormholes) TokenPledge() (string, error) {
 	}
 
 	transaction := types2.Transaction{
-		Type:    types2.TokenPledge,
-		Version: types2.WormHolesVersion,
+		Type:         types2.TokenPledge,
+		ProxyAddress: proxyAddress,
+		ProxySign:    string(proxySign),
+		Version:      types2.WormHolesVersion,
 	}
 
 	data, err := json.Marshal(transaction)
@@ -1150,7 +1152,7 @@ func (worm *Wormholes) FoundryExchange(buyer, seller2 []byte, to string) (string
 //	{"price":"0xde0b6b3a7640000","worm_address":"0x0000000000000000000000000000000000000004","exchanger":"0xe61e5Bbe724B8F449B5C7BB4a09F99A057253eB4","block_number":"0x930","sig":"0xfa6cac0a88e4792a45b7f743a1f3737d70e4f100e3f8b10a404617fcbaa706130f617e785edc0cc5796758ca2dba82ea422a18b6624b63b4b2ee412713d243651c"}
 //	{"exchanger_owner":"0xe61e5Bbe724B8F449B5C7BB4a09F99A057253eB4","to":"0xEaE404DCa7c22A15A59f63002Df54BBb8D90c5FB","block_number":"0x92b","sig":"0x972099c287a8da54bb13e7134fcd7edcf96122f1dc949ab987961072011e57662ccb9482ed3738fcdefa613a4d7f58b02fffdf4702943e48bc93af3be7af34191c"}
 //	to            "0x5051B76579BC966A9480dd6E72B39A4C89c1154C",	Buyer's address
-func (worm *Wormholes) NftExchangeMatch(buyer, exchangerAuth []byte, to string) (string, error) {
+func (worm *Wormholes) NftExchangeMatch(buyer, seller, exchangerAuth []byte, to string) (string, error) {
 	err := tools.CheckAddress("NftExchangeMatch() to", to)
 	if err != nil {
 		return "", err
@@ -1164,6 +1166,17 @@ func (worm *Wormholes) NftExchangeMatch(buyer, exchangerAuth []byte, to string) 
 	}
 
 	err = tools.CheckHex("buyers.BlockNumber", buyers.BlockNumber)
+	if err != nil {
+		return "", err
+	}
+
+	var sellers types2.Seller1
+	err = json.Unmarshal(seller, &sellers)
+	if err != nil {
+		return "", xerrors.New("the formate of sellers is wrong")
+	}
+
+	err = tools.CheckHex("sellers.BlockNumber", sellers.BlockNumber)
 	if err != nil {
 		return "", err
 	}
@@ -1198,6 +1211,7 @@ func (worm *Wormholes) NftExchangeMatch(buyer, exchangerAuth []byte, to string) 
 	transaction := types2.Transaction{
 		Type:          types2.NftExchangeMatch,
 		Buyer:         &buyers,
+		Seller1:       &sellers,
 		ExchangerAuth: &exchangeAuths,
 		Version:       types2.WormHolesVersion,
 	}
@@ -1356,14 +1370,14 @@ func (worm *Wormholes) FoundryExchangeInitiated(buyer, seller2, exchangerAuth []
 	return strings.ToLower(signedTx.Hash().String()), nil
 }
 
-// FtDoesNotAuthorizeExchanges
+// NFTDoesNotAuthorizeExchanges
 //	Used to buy and sell NFTs that have been minted, the transaction originator is the exchange, and the transaction is used when the NFT is not authorized to the exchange
 //
 //	Parameter Description
 //	buyer:  {"price":"0xde0b6b3a7640000","worm_address":"0x0000000000000000000000000000000000000002","exchanger":"0x5051B76579BC966A9480dd6E72B39A4C89c1154C","block_number":"0x11b","sig":"0x158f0ba9dedac427a7746e78aef44ff64c5affa749e56e28793bec6af2a1ff2804a5fd1cce251c84e08674333424a99c8b7497a92f30ed74ceddfc482940ebaa1c"}
 //	seller1: {"price":"0xde0b6b3a7640000","worm_address":"0x0000000000000000000000000000000000000002","exchanger":"0x5051B76579BC966A9480dd6E72B39A4C89c1154C","block_number":"0x113","sig":"0x1c8559524220b49e6b9548be405331228d8f26ced8ce12e81b672443fe28067327eef62ce2b3826e2e9ec10f8b2cf5d8a2b2519a0e95f288ea3f098fdea6ab6b1c"}
 //	to:      "0xe61e5Bbe724B8F449B5C7BB4a09F99A057253eB4",		Buyer's address
-func (worm *Wormholes) FtDoesNotAuthorizeExchanges(buyer, seller1 []byte, to string) (string, error) {
+func (worm *Wormholes) NFTDoesNotAuthorizeExchanges(buyer, seller1 []byte, to string) (string, error) {
 	err := tools.CheckAddress("FtDoesNotAuthorizeExchanges() to", to)
 	if err != nil {
 		return "", err
@@ -1768,7 +1782,7 @@ func (worm *Wormholes) ChangeRewardsType() (string, error) {
 //Delegate large accounts to small accounts
 // Parameter Description
 // proxyAddress:		0xe61e5Bbe724B8F449B5C7BB4a09F99A057253eB4
-func (worm *Wormholes) AccountDelegate(proxyAddress string) (string, error) {
+func (worm *Wormholes) AccountDelegate(proxySign []byte, proxyAddress string) (string, error) {
 	ctx := context.Background()
 	account, fromKey, err := tools.PriKeyToAddress(worm.priKey)
 	if err != nil {
@@ -1788,6 +1802,7 @@ func (worm *Wormholes) AccountDelegate(proxyAddress string) (string, error) {
 	transaction := types2.Transaction{
 		Type:         types2.AccountDelegate,
 		ProxyAddress: proxyAddress,
+		ProxySign:    string(proxySign),
 		Version:      types2.WormHolesVersion,
 	}
 
