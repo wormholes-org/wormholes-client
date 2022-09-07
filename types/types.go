@@ -28,7 +28,7 @@ const (
 	RevokesPledgeAmount
 	VoteOfficialNFT
 	VoteOfficialNFTByApprovedExchanger
-	ChangeRewardsType
+	UnforzenAccount
 	_
 	_
 	_

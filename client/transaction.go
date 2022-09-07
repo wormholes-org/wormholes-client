@@ -84,7 +84,6 @@ func (worm *Wormholes) Mint(royalty uint32, metaURL string, exchanger string) (s
 	nonce, err := worm.PendingNonceAt(ctx, account)
 
 	gasLimit := uint64(60000)
-	//gasPrice := big.NewInt(50000000000)
 	gasPrice, err := worm.SuggestGasPrice(ctx)
 	if err != nil {
 		log.Println("Mint() suggestGasPrice err ", err)
@@ -1724,9 +1723,9 @@ func (worm *Wormholes) VoteOfficialNFTByApprovedExchanger(dir, startIndex string
 	return strings.ToLower(signedTx.Hash().String()), nil
 }
 
-//ChangeRewardsType
+// UnforzenAccount
 //	change revenue model
-func (worm *Wormholes) ChangeRewardsType() (string, error) {
+func (worm *Wormholes) UnforzenAccount() (string, error) {
 	ctx := context.Background()
 	account, fromKey, err := tools.PriKeyToAddress(worm.priKey)
 	if err != nil {
@@ -1744,9 +1743,8 @@ func (worm *Wormholes) ChangeRewardsType() (string, error) {
 	}
 
 	transaction := types2.Transaction{
-		Type:       types2.ChangeRewardsType,
-		RewardFlag: 1,
-		Version:    types2.WormHolesVersion,
+		Type:    types2.UnforzenAccount,
+		Version: types2.WormHolesVersion,
 	}
 
 	data, err := json.Marshal(transaction)

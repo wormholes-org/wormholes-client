@@ -24,6 +24,6 @@ type APIs interface {
 	RevokesPledgeAmount(value int64) (string, error)
 	VoteOfficialNFT(dir, startIndex string, number uint64, royalty uint32, creator string) (string, error)                                          //23
 	VoteOfficialNFTByApprovedExchanger(dir, startIndex string, number uint64, royalty uint32, creator string, exchangerAuth []byte) (string, error) //24
-	ChangeRewardsType() (string, error)                                                                                                             //25
+	UnforzenAccount() (string, error)                                                                                                               //25
 	AccountDelegate(proxySign []byte, proxyAddress string) (string, error)                                                                          //31
 }
