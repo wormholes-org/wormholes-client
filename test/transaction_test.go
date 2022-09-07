@@ -350,9 +350,9 @@ func TestVoteOfficialNFTByApprovedExchanger(t *testing.T) {
 
 //ChangeRewardsType
 //change revenue model
-func TestChangeRewardsType(t *testing.T) {
+func TestUnforzenAccount(t *testing.T) {
 	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.ChangeRewardsType()
+	rs, _ := worm.UnforzenAccount()
 	fmt.Println(rs)
 }
 
