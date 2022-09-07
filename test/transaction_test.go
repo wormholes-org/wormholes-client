@@ -29,7 +29,7 @@ func TestNewClient(t *testing.T) {
 //Recharge
 func TestRecharge(t *testing.T) {
 	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.NFT.Recharge("0x814920c33b1a037F91a16B126282155c6F92A10F", 100)
+	rs, _ := worm.NormalTransaction("0x814920c33b1a037F91a16B126282155c6F92A10F", 100, "")
 	fmt.Println(rs)
 }
 
@@ -37,7 +37,7 @@ func TestRecharge(t *testing.T) {
 //NFT mint 0
 func TestMint(t *testing.T) {
 	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.NFT.Mint(10, "/ipfs/ddfd90be9408b4", exchangeAddress)
+	rs, _ := worm.Mint(10, "/ipfs/ddfd90be9408b4", exchangeAddress)
 	fmt.Println(rs)
 }
 
@@ -47,7 +47,7 @@ func TestMint(t *testing.T) {
 //NFT transfer 1
 func TestTransfer(t *testing.T) {
 	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.NFT.Transfer("0x0000000000000000000000000000000000000001", sellerAddress)
+	rs, _ := worm.Transfer("0x0000000000000000000000000000000000000001", sellerAddress)
 	fmt.Println(rs)
 }
 
@@ -57,7 +57,7 @@ func TestTransfer(t *testing.T) {
 //NFT authorization 2
 func TestAuthor(t *testing.T) {
 	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.NFT.Author("0x0000000000000000000000000000000000000002", exchangeAddress)
+	rs, _ := worm.Author("0x0000000000000000000000000000000000000002", exchangeAddress)
 	fmt.Println(rs)
 }
 
@@ -67,7 +67,7 @@ func TestAuthor(t *testing.T) {
 //Cancel a single authorization 3
 func TestAuthorRevoke(t *testing.T) {
 	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.NFT.AuthorRevoke("0x0000000000000000000000000000000000000002", exchangeAddress)
+	rs, _ := worm.AuthorRevoke("0x0000000000000000000000000000000000000002", exchangeAddress)
 	fmt.Println(rs)
 }
 
@@ -77,7 +77,7 @@ func TestAuthorRevoke(t *testing.T) {
 //All NFTs under the authorized account 4
 func TestAccountAuthor(t *testing.T) {
 	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.NFT.AccountAuthor(exchangeAddress)
+	rs, _ := worm.AccountAuthor(exchangeAddress)
 	fmt.Println(rs)
 }
 
@@ -87,7 +87,7 @@ func TestAccountAuthor(t *testing.T) {
 //Cancel all NFTs under the authorized account 5
 func TestAccountAuthorRevoke(t *testing.T) {
 	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.NFT.AccountAuthorRevoke(exchangeAddress)
+	rs, _ := worm.AccountAuthorRevoke(exchangeAddress)
 	fmt.Println(rs)
 }
 
@@ -97,7 +97,7 @@ func TestAccountAuthorRevoke(t *testing.T) {
 //Fragment NFT exchange 6
 func TestSNFTToERB(t *testing.T) {
 	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.NFT.SNFTToERB("0x8000000000000000000000000000000000000004")
+	rs, _ := worm.SNFTToERB("0x8000000000000000000000000000000000000004")
 	fmt.Println(rs)
 }
 
@@ -107,7 +107,7 @@ func TestSNFTToERB(t *testing.T) {
 //ERB pledge 9
 func TestTokenPledge(t *testing.T) {
 	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.NFT.TokenPledge()
+	rs, _ := worm.TokenPledge([]byte(""), "")
 	fmt.Println(rs)
 }
 
@@ -117,7 +117,7 @@ func TestTokenPledge(t *testing.T) {
 //ERB revokes pledge 10
 func TestTokenRevokesPledge(t *testing.T) {
 	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.NFT.TokenRevokesPledge()
+	rs, _ := worm.TokenRevokesPledge()
 	fmt.Println(rs)
 }
 
@@ -127,7 +127,7 @@ func TestTokenRevokesPledge(t *testing.T) {
 //Open an exchange 11
 func TestOpen(t *testing.T) {
 	worm := client.NewClient(exchangerPriKey, endpoint)
-	rs, _ := worm.NFT.Open(10, "wormholes", "www.kang123456.com")
+	rs, _ := worm.Open(10, "wormholes", "www.kang123456.com")
 	fmt.Println(rs)
 }
 
@@ -137,7 +137,7 @@ func TestOpen(t *testing.T) {
 //close a exchange 12
 func TestClose(t *testing.T) {
 	worm := client.NewClient(exchangerPriKey, endpoint)
-	rs, _ := worm.NFT.Close()
+	rs, _ := worm.Close()
 	fmt.Println(rs)
 }
 
@@ -147,7 +147,7 @@ func TestClose(t *testing.T) {
 //Injecting System NFT Fragments 13
 func TestInsertNFTBlock(t *testing.T) {
 	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.NFT.InsertNFTBlock("wormholes2", "0x640001", 6553600, 20, "0xab7624f47fd7dadb6b8e255d06a2f10af55990fe")
+	rs, _ := worm.InsertNFTBlock("wormholes2", "0x640001", 6553600, 20, "0xab7624f47fd7dadb6b8e255d06a2f10af55990fe")
 	fmt.Println(rs)
 }
 
@@ -156,7 +156,7 @@ func TestInsertNFTBlock(t *testing.T) {
 //TransactionNFT 14
 func TestTransactionNFT(t *testing.T) {
 	worm := client.NewClient(buyerPriKey, endpoint)
-	number, _ := worm.NFT.BlockNumber(context.Background())
+	number, _ := worm.BlockNumber(context.Background())
 	blockNumber := fmt.Sprintf("0x%x", number+10)
 	buyer, err := worm.Wallet.SignBuyer("0xde0b6b3a7640000", "0x0000000000000000000000000000000000000002", "0x8b07aff2327a3B7e2876D899caFac99f7AE16B10", blockNumber, "")
 	if err != nil {
@@ -166,7 +166,7 @@ func TestTransactionNFT(t *testing.T) {
 	fmt.Println("sign ", string(buyer))
 
 	worm1 := client.NewClient(sellerPriKey, endpoint)
-	rs, _ := worm1.NFT.TransactionNFT(buyer, buyerAddress)
+	rs, _ := worm1.TransactionNFT(buyer, buyerAddress)
 	fmt.Println(rs)
 }
 
@@ -183,7 +183,7 @@ func TestBuyerInitiatingTransaction(t *testing.T) {
 	fmt.Println("sign ", string(seller1))
 
 	worm1 := client.NewClient(buyerPriKey, endpoint)
-	rs, _ := worm1.NFT.BuyerInitiatingTransaction(seller1)
+	rs, _ := worm1.BuyerInitiatingTransaction(seller1)
 	fmt.Println(rs)
 }
 
@@ -200,7 +200,7 @@ func TestFoundryTradeBuyer(t *testing.T) {
 	fmt.Println("sign ", string(seller2))
 
 	worm1 := client.NewClient(buyerPriKey, endpoint)
-	rs, _ := worm1.NFT.FoundryTradeBuyer(seller2)
+	rs, _ := worm1.FoundryTradeBuyer(seller2)
 	fmt.Println(rs)
 }
 
@@ -221,7 +221,7 @@ func TestFoundryExchange(t *testing.T) {
 	}
 
 	worm2 := client.NewClient(exchangerPriKey, endpoint)
-	rs, _ := worm2.NFT.FoundryExchange(buyer, seller2, buyerAddress)
+	rs, _ := worm2.FoundryExchange(buyer, seller2, buyerAddress)
 	fmt.Println(rs)
 }
 
@@ -235,14 +235,20 @@ func TestNftExchangeMatch(t *testing.T) {
 		log.Fatalln("Signing failed")
 	}
 
-	worm1 := client.NewClient(exchangerPriKey, "")
-	exchangeAuth, err := worm1.Wallet.SignExchanger(exchangeAddress, exchangeAddress1, "0xa")
+	worm1 := client.NewClient(sellerPriKey, "")
+	seller, err := worm1.Wallet.SignSeller1("0xde0b6b3a7640000", "0x0000000000000000000000000000000000000004", exchangeAddress, "0xa")
 	if err != nil {
 		log.Fatalln("Signing failed")
 	}
 
-	worm2 := client.NewClient(exchangerPriKey1, endpoint)
-	rs, _ := worm2.NFT.NftExchangeMatch(buyer, exchangeAuth, buyerAddress)
+	worm2 := client.NewClient(exchangerPriKey, "")
+	exchangeAuth, err := worm2.Wallet.SignExchanger(exchangeAddress, exchangeAddress1, "0xa")
+	if err != nil {
+		log.Fatalln("Signing failed")
+	}
+
+	worm3 := client.NewClient(exchangerPriKey1, endpoint)
+	rs, _ := worm3.NftExchangeMatch(buyer, seller, exchangeAuth, buyerAddress)
 	fmt.Println(rs)
 }
 
@@ -275,14 +281,14 @@ func TestFoundryExchangeInitiated(t *testing.T) {
 	fmt.Println(string(exchangeAuth))
 
 	worm3 := client.NewClient(exchangerPriKey1, endpoint)
-	rs, _ := worm3.NFT.FoundryExchangeInitiated(buyer, seller2, exchangeAuth, buyerAddress)
+	rs, _ := worm3.FoundryExchangeInitiated(buyer, seller2, exchangeAuth, buyerAddress)
 	fmt.Println(rs)
 }
 
 //0xc9cc570057faf1edd83f48833520f9d546e4972083ee705152b5f35630f1588d
 
 //FtDoesNotAuthorizeExchanges 20
-func TestFtDoesNotAuthorizeExchanges(t *testing.T) {
+func TestNFTDoesNotAuthorizeExchanges(t *testing.T) {
 	worm := client.NewClient(buyerPriKey, "")
 	buyer, err := worm.Wallet.SignBuyer("0xde0b6b3a7640000", "0x0000000000000000000000000000000000000001", exchangeAddress, "0xa", "")
 	if err != nil {
@@ -297,7 +303,7 @@ func TestFtDoesNotAuthorizeExchanges(t *testing.T) {
 
 	worm2 := client.NewClient(exchangerPriKey, endpoint)
 
-	rs, _ := worm2.NFT.FtDoesNotAuthorizeExchanges(buyer, seller1, buyerAddress)
+	rs, _ := worm2.NFTDoesNotAuthorizeExchanges(buyer, seller1, buyerAddress)
 	fmt.Println(rs)
 }
 
@@ -306,7 +312,7 @@ func TestFtDoesNotAuthorizeExchanges(t *testing.T) {
 //AdditionalPledgeAmount 21
 func TestAdditionalPledgeAmount(t *testing.T) {
 	worm := client.NewClient(exchangerPriKey, endpoint)
-	rs, _ := worm.NFT.AdditionalPledgeAmount(100)
+	rs, _ := worm.AdditionalPledgeAmount(100)
 	fmt.Println(rs)
 }
 
@@ -315,7 +321,7 @@ func TestAdditionalPledgeAmount(t *testing.T) {
 //AdditionalPledgeAmount 22
 func TestRevokesPledgeAmount(t *testing.T) {
 	worm := client.NewClient(exchangerPriKey, endpoint)
-	rs, _ := worm.NFT.RevokesPledgeAmount(100)
+	rs, _ := worm.RevokesPledgeAmount(100)
 	fmt.Println(rs)
 }
 
@@ -324,7 +330,7 @@ func TestRevokesPledgeAmount(t *testing.T) {
 //VoteOfficialNFT
 func TestVoteOfficialNFT(t *testing.T) {
 	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.NFT.VoteOfficialNFT("wormholes2", "0x640001", 6553600, 20, "0xab7624f47fd7dadb6b8e255d06a2f10af55990fe")
+	rs, _ := worm.VoteOfficialNFT("wormholes2", "0x640001", 6553600, 20, "0xab7624f47fd7dadb6b8e255d06a2f10af55990fe")
 	fmt.Println(rs)
 }
 
@@ -338,7 +344,7 @@ func TestVoteOfficialNFTByApprovedExchanger(t *testing.T) {
 
 	fmt.Println(string(exchangeAuth))
 	worm1 := client.NewClient(exchangeAddress1, endpoint)
-	rs, _ := worm1.NFT.VoteOfficialNFTByApprovedExchanger("wormholes2", "0x640001", 6553600, 20, "0xab7624f47fd7dadb6b8e255d06a2f10af55990fe", exchangeAuth)
+	rs, _ := worm1.VoteOfficialNFTByApprovedExchanger("wormholes2", "0x640001", 6553600, 20, "0xab7624f47fd7dadb6b8e255d06a2f10af55990fe", exchangeAuth)
 	fmt.Println(rs)
 }
 
@@ -346,7 +352,7 @@ func TestVoteOfficialNFTByApprovedExchanger(t *testing.T) {
 //change revenue model
 func TestChangeRewardsType(t *testing.T) {
 	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.NFT.ChangeRewardsType()
+	rs, _ := worm.ChangeRewardsType()
 	fmt.Println(rs)
 }
 
@@ -354,6 +360,7 @@ func TestChangeRewardsType(t *testing.T) {
 //Delegate large accounts to small accounts
 func TestAccountDelegate(t *testing.T) {
 	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.NFT.AccountDelegate(buyerAddress)
+	proxySign, _ := worm.Wallet.SignDelegate("address", "pledgeAccount")
+	rs, _ := worm.AccountDelegate(proxySign, buyerAddress)
 	fmt.Println(rs)
 }
