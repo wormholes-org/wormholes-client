@@ -6,9 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="2914a8b1-9edb-4a1f-98f4-953678c737e7" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/client/api.go" beforeDir="false" afterPath="$PROJECT_DIR$/client/api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/transaction.go" beforeDir="false" afterPath="$PROJECT_DIR$/client/transaction.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/types/types.go" beforeDir="false" afterPath="$PROJECT_DIR$/types/types.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,8 +30,8 @@
     <setting file="file://$PROJECT_DIR$/test/rpc_test.go" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/test/transaction_test.go" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/client/worm_client.go" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/client/singer.go" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/go.mod" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/client/singer.go" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/types/nft.go" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/types/types.go" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/client/api.go" root0="FORCE_HIGHLIGHTING" />

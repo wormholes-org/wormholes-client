@@ -227,19 +227,17 @@ go get github.com/wormholes-org/wormholes-client
 
 - ## NFT interface
 
-    - ### Recharge
+    - ### NormalTransaction
 
       ```
-      Mint(royalty uint32, metaURL string, exchanger string) (string, error)
+      NormalTransaction(to string, value int64, data string) (string, error)
       ```
-
-      Implement NFT minting, create an NFT on the wormholes chain
 
       **Params**
 
-      > - *royalty:         Royalty, formatted as an integer*
-      > - metaURL:       NFT metadata address, formatted as string*
-      > - *exchanger:  The exchange when the NFT is minted, the format is a string. When this field is filled, the exchange will exclusively own the NFT. If it is not filled in, no exchange will exclusively own the NFT*
+      > - *to:         transaction recipient*
+      > - value:       transaction value*
+      > - *data:       transaction data*
 
       **Return**
 
@@ -263,7 +261,7 @@ go get github.com/wormholes-org/wormholes-client
       
       func main() {
           worm := client.NewClient(priKey, endpoint)
-          rs, _ := worm.NFT.Mint(10,"/ipfs/ddfd90be9408b4","0xe61e5Bbe724B8F449B5C7BB4a09F99A057253eB4")
+          rs, _ := worm.NormalTransaction("0xe61e5Bbe724B8F449B5C7BB4a09F99A057253eB4", 10, "")
           fmt.Println(rs) //0x8fa2d4b70013407012d002fa395939cb0d322553e4848aaae78d4fad638bef55
       }
       ```
@@ -304,7 +302,7 @@ go get github.com/wormholes-org/wormholes-client
       
       func main() {
           worm := client.NewClient(priKey, endpoint)
-          rs, _ := worm.NFT.Mint(10,"/ipfs/ddfd90be9408b4","0xe61e5Bbe724B8F449B5C7BB4a09F99A057253eB4")
+          rs, _ := worm.Mint(10,"/ipfs/ddfd90be9408b4","0xe61e5Bbe724B8F449B5C7BB4a09F99A057253eB4")
           fmt.Println(rs) //0x8fa2d4b70013407012d002fa395939cb0d322553e4848aaae78d4fad638bef55
       }
       ```
@@ -344,7 +342,7 @@ go get github.com/wormholes-org/wormholes-client
       
       func main() {
           worm := client.NewClient(priKey, endpoint)
-          rs, _ := worm.NFT.Transfer("0x0000000000000000000000000000000000000001", "0x814920c33b1a037F91a16B126282155c6F92A10F")
+          rs, _ := worm.Transfer("0x0000000000000000000000000000000000000001", "0x814920c33b1a037F91a16B126282155c6F92A10F")
           fmt.Println(rs) //0x5e8dd659b0ceb95ab53ce32d37daa8688accab601ce58c75e706f08bb47617f4
       }
       ```
@@ -425,7 +423,7 @@ go get github.com/wormholes-org/wormholes-client
       
       func main() {
           worm := client.NewClient(priKey, endpoint)
-          rs, _ := worm.NFT.AuthorRevoke("0x0000000000000000000000000000000000000001", "0x814920c33b1a037F91a16B126282155c6F92A10F")
+          rs, _ := worm.AuthorRevoke("0x0000000000000000000000000000000000000001", "0x814920c33b1a037F91a16B126282155c6F92A10F")
           fmt.Println(rs) //0xe043dc7d8505d01f6cd949b7a7cc4ed685a9e1b640195801c3c6265b7d11efee
       }
       ```
@@ -464,7 +462,7 @@ go get github.com/wormholes-org/wormholes-client
       
       func main() {
           worm := client.NewClient(priKey, endpoint)
-          rs, _ := worm.NFT.AccountAuthor("0x814920c33b1a037F91a16B126282155c6F92A10F")
+          rs, _ := worm.AccountAuthor("0x814920c33b1a037F91a16B126282155c6F92A10F")
           fmt.Println(rs) //0x6b42237b9dad13211d89f1e6c66cf947bb371f407a4621ffcf7fd73e385f6fea
       }
       ```
@@ -503,7 +501,7 @@ go get github.com/wormholes-org/wormholes-client
     
       func main() {
           worm := client.NewClient(priKey, endpoint)
-          rs, _ := worm.NFT.AccountAuthorRevoke("0x814920c33b1a037F91a16B126282155c6F92A10F")
+          rs, _ := worm.AccountAuthorRevoke("0x814920c33b1a037F91a16B126282155c6F92A10F")
           fmt.Println(rs) //0x1dee05dff7ea39874ed8401c91288ae627b56ae1df6dc4c26a856fafab0447c5
       }
       ```
@@ -542,7 +540,7 @@ go get github.com/wormholes-org/wormholes-client
     
       func main() {
           worm := client.NewClient(priKey, endpoint)
-          rs, _ := worm.NFT.SNFTToERB("0x8000000000000000000000000000000000000004")
+          rs, _ := worm.SNFTToERB("0x8000000000000000000000000000000000000004")
           fmt.Println(rs) //0x77ff920a3a649378e4c7a58644bece643e379113b2bc99257b894a29e220e157
       }
       ```
@@ -577,7 +575,7 @@ go get github.com/wormholes-org/wormholes-client
     
       func main() {
           worm := client.NewClient(priKey, endpoint)
-          rs, _ := worm.NFT.TokenPledge()
+          rs, _ := worm.TokenPledge()
           fmt.Println(rs) //0x6ceb02802455ab959964866410f37a2f0fcd78e7e64e87d6c9d8102de7f9974b
       }
       ```
@@ -612,7 +610,7 @@ go get github.com/wormholes-org/wormholes-client
     
       func main() {
           worm := client.NewClient(priKey, endpoint)
-          rs, _ := worm.NFT.TokenRevokesPledge()
+          rs, _ := worm.TokenRevokesPledge()
           fmt.Println(rs) //0xcbd19c386d8b5944d4a88017680239651edefc527e4ba2c8762ab0df2333a7ca
       }
       ```
@@ -653,7 +651,7 @@ go get github.com/wormholes-org/wormholes-client
       
       func main() {
           worm := client.NewClient(priKey, endpoint)
-          rs, _ := worm.NFT.Open(10,"wormholes","www.kang123456.com")
+          rs, _ := worm.Open(10,"wormholes","www.kang123456.com")
           fmt.Println(rs) //0xcccd6c9499224e7d216f3bd230447900550b07345841eebd2e62b613f7bd924f
       }
       ```
@@ -688,7 +686,7 @@ go get github.com/wormholes-org/wormholes-client
       
       func main() {
           worm := client.NewClient(priKey, endpoint)
-          rs, _ := worm.NFT.Close()
+          rs, _ := worm.Close()
           fmt.Println(rs) //0x7d5b3653b67d298e7cce82b92fa720224e93941315528ef19a36c4daf1efe929
       }
       ```
@@ -731,7 +729,7 @@ go get github.com/wormholes-org/wormholes-client
     
       func main() {
           worm := client.NewClient(priKey, endpoint)
-          rs, _ := worm.NFT.InsertNFTBlock("wormholes2", "0x640001", 6553600, 20, "0xEaE404DCa7c22A15A59f63002Df54BBb8D90c5FB")
+          rs, _ := worm.InsertNFTBlock("wormholes2", "0x640001", 6553600, 20, "0xEaE404DCa7c22A15A59f63002Df54BBb8D90c5FB")
           fmt.Println(rs) //0x61cd018d6e70af47c6204fea18db5b33fdecc92162cca66b0089783733809e84
       }
       ```
@@ -771,7 +769,7 @@ go get github.com/wormholes-org/wormholes-client
       
       func main() {
           worm := client.NewClient(priKey, endpoint)
-          rs, _ := worm.NFT.TransactionNFT(buyer,"0x5051B76579BC966A9480dd6E72B39A4C89c1154C")
+          rs, _ := worm.TransactionNFT(buyer,"0x5051B76579BC966A9480dd6E72B39A4C89c1154C")
           fmt.Println(rs) //0xc9c4e6652ba411a0435d2e3187f019329b084734f19ae6699ee7f1fa9a92123b
       }
       ```
@@ -811,7 +809,7 @@ go get github.com/wormholes-org/wormholes-client
       
       func main() {
           worm := client.NewClient(priKey, endpoint)
-          rs, _ := worm.NFT.BuyerInitiatingTransaction(seller1, "0x814920c33b1a037F91a16B126282155c6F92A10F")
+          rs, _ := worm.BuyerInitiatingTransaction(seller1, "0x814920c33b1a037F91a16B126282155c6F92A10F")
           fmt.Println(rs) //0xfb9cf0100340c9bf965fc0f8ef44bb8a75af58175deab0dcff3979a97a8ebefa
       }
       ```
@@ -851,7 +849,7 @@ go get github.com/wormholes-org/wormholes-client
     
       func main() {
           worm := client.NewClient(priKey, endpoint)
-          rs, _ := worm.NFT.FoundryTradeBuyer(seller2, "0x814920c33b1a037F91a16B126282155c6F92A10F")
+          rs, _ := worm.FoundryTradeBuyer(seller2, "0x814920c33b1a037F91a16B126282155c6F92A10F")
           fmt.Println(rs) //0x4634d6bbc36b9444914a259c2acf0410af0b99122baef30d7a8701a496bc3b6c
       }
       ```
@@ -892,7 +890,7 @@ go get github.com/wormholes-org/wormholes-client
       
       func main() {
           worm := client.NewClient(priKey, endpoint)
-          rs, _ := worm.NFT.FoundryTradeBuyer(buyer,seller2 "0x5051B76579BC966A9480dd6E72B39A4C89c1154C")
+          rs, _ := worm.FoundryTradeBuyer(buyer,seller2 "0x5051B76579BC966A9480dd6E72B39A4C89c1154C")
           fmt.Println(rs) //0x70853466fdf5dc4476fab34b79f9be2e66f0448789937094de0b0aa5f3345e8c
       }
       ```
@@ -933,7 +931,7 @@ go get github.com/wormholes-org/wormholes-client
       
       func main() {
           worm := client.NewClient(priKey, endpoint)
-          rs, _ := worm.NFT.NftExchangeMatch(buyer,exchangAuth,"0x5051B76579BC966A9480dd6E72B39A4C89c1154C")
+          rs, _ := worm.NftExchangeMatch(buyer,exchangAuth,"0x5051B76579BC966A9480dd6E72B39A4C89c1154C")
           fmt.Println(rs) //0xf11e024297b89e6dfd02bc2da4680cea353ea6956c3ea9084afa40d58477932f
       }
       ```
@@ -975,7 +973,7 @@ go get github.com/wormholes-org/wormholes-client
       
       func main() {
           worm := client.NewClient(priKey, endpoint)
-          rs, _ := worm.NFT.NftExchangeMatch(buyer,seller2,exchangAuth,  "0x5051B76579BC966A9480dd6E72B39A4C89c1154C")
+          rs, _ := worm.NftExchangeMatch(buyer,seller2,exchangAuth,  "0x5051B76579BC966A9480dd6E72B39A4C89c1154C")
           fmt.Println(rs) //0xc9cc570057faf1edd83f48833520f9d546e4972083ee705152b5f35630f1588d
       }
       ```
@@ -1016,7 +1014,7 @@ go get github.com/wormholes-org/wormholes-client
       
       func main() {
           worm := client.NewClient(priKey, endpoint)
-          rs, _ := worm.NFT.FtDoesNotAuthorizeExchanges(buyer,seller1,"0x5051B76579BC966A9480dd6E72B39A4C89c1154C")
+          rs, _ := worm.FtDoesNotAuthorizeExchanges(buyer,seller1,"0x5051B76579BC966A9480dd6E72B39A4C89c1154C")
           fmt.Println(rs) //0x95615a6c7a164537257492c112a9fcd99907315893706a1b104456d9e3aa8af6
       }
       ```
@@ -1055,7 +1053,7 @@ go get github.com/wormholes-org/wormholes-client
       
       func main() {
           worm := client.NewClient(priKey, endpoint)
-          rs, _ := worm.NFT.AdditionalPledgeAmount(100)
+          rs, _ := worm.AdditionalPledgeAmount(100)
           fmt.Println(rs) //0x25f2ed8cf5f1041be9e71d483a32b01fd3f7820ec59e0c060830214c53fea5f9
       }
       ```
@@ -1094,7 +1092,7 @@ go get github.com/wormholes-org/wormholes-client
       
       func main() {
           worm := client.NewNFT(priKey, endpoint)
-          rs, _ := worm.NFT.RevokesPledgeAmount(100)
+          rs, _ := worm.RevokesPledgeAmount(100)
           fmt.Println(rs) //0xd2c7f943f0f5364b0928c518e7b6de7491c0e8efb6abf912a17e6860f70ebec1
       }
       ```
@@ -1136,7 +1134,7 @@ go get github.com/wormholes-org/wormholes-client
     
       func main() {
         worm := client.NewClient(priKey, endpoint)
-        rs, _ := worm.NFT.VoteOfficialNFT("wormholes2", "0x640001", 6553600, 20, "0xEaE404DCa7c22A15A59f63002Df54BBb8D90c5FB")
+        rs, _ := worm.VoteOfficialNFT("wormholes2", "0x640001", 6553600, 20, "0xEaE404DCa7c22A15A59f63002Df54BBb8D90c5FB")
         fmt.Println(rs) //0x61cd018d6e70af47c6204fea18db5b33fdecc92162cca66b0089783733809e84
       }
       ```
@@ -1179,18 +1177,18 @@ go get github.com/wormholes-org/wormholes-client
     
       func main() {
            worm := client.NewClient(priKey, endpoint)
-           rs, _ := worm.NFT.VoteOfficialNFTByApprovedExchanger("wormholes2", "0x640001", 6553600, 20, "0xab7624f47fd7dadb6b8e255d06a2f10af55990fe", exchangeAuth)
+           rs, _ := worm.VoteOfficialNFTByApprovedExchanger("wormholes2", "0x640001", 6553600, 20, "0xab7624f47fd7dadb6b8e255d06a2f10af55990fe", exchangeAuth)
            fmt.Println(rs)
       }
       ```
 
-    - ### ChangeRewardsType
+    - ### UnforzenAccount
 
       ```
-      ChangeRewardsType() (string, error)
+      UnforzenAccount() (string, error)
       ```
 
-      This transaction is used to change rewards
+      This transaction is used to unforzen account
 
       **Return**
 
@@ -1214,7 +1212,7 @@ go get github.com/wormholes-org/wormholes-client
     
       func main() {
          worm := client.NewClient(priKey, endpoint)
-         rs, _ := worm.NFT.ChangeRewardsType()
+         rs, _ := worm.UnforzenAccount()
          fmt.Println(rs)
       }
       ```
@@ -1253,7 +1251,7 @@ go get github.com/wormholes-org/wormholes-client
     
       func main() {
        worm := client.NewClient(priKey, endpoint)
-       rs, _ := worm.NFT.AccountDelegate("0x814920c33b1a037F91a16B126282155c6F92A10F")
+       rs, _ := worm.AccountDelegate("0x814920c33b1a037F91a16B126282155c6F92A10F")
        fmt.Println(rs)
       }
       ```

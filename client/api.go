@@ -1,6 +1,7 @@
 package client
 
 type APIs interface {
+	NormalTransaction(to string, value int64, data string) (string, error)
 	Mint(royalty uint32, metaURL string, exchanger string) (string, error)
 	Transfer(nftAddress, to string) (string, error)
 	Author(nftAddress, to string) (string, error)
