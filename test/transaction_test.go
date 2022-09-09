@@ -3,9 +3,12 @@ package test
 import (
 	"context"
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/wormholes-org/wormholes-client/client"
 	"log"
+	"strings"
 	"testing"
+	"time"
 )
 
 const (
@@ -350,9 +353,9 @@ func TestVoteOfficialNFTByApprovedExchanger(t *testing.T) {
 
 //ChangeRewardsType
 //change revenue model
-func TestChangeRewardsType(t *testing.T) {
+func TestUnforzenAccount(t *testing.T) {
 	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.ChangeRewardsType()
+	rs, _ := worm.UnforzenAccount()
 	fmt.Println(rs)
 }
 
@@ -363,4 +366,99 @@ func TestAccountDelegate(t *testing.T) {
 	proxySign, _ := worm.Wallet.SignDelegate("address", "pledgeAccount")
 	rs, _ := worm.AccountDelegate(proxySign, buyerAddress)
 	fmt.Println(rs)
+}
+
+func TestGetBalance(t *testing.T) {
+	worm := client.NewClient(priKey, endpoint)
+	balance, _ := worm.Balance(context.Background(), exchangeAddress)
+	fmt.Println(balance)
+}
+
+func TestCheckNFTPool(t *testing.T) {
+	worm := client.NewClient("c1e74da8e26c5a60870089f59695a1b243887f9d23571d24c7f011b8eb068768", "http://192.168.4.240:8561")
+
+	var flag bool
+	num := int64(22)
+	for {
+		if flag {
+			break
+		} else {
+			current, _ := worm.BlockNumber(context.Background())
+			if uint64(num) > current {
+				time.Sleep(time.Second * 5)
+			} else {
+				fmt.Println("num: ", num)
+				//res1, _ := worm.NFT.GetBlockBeneficiaryAddressByNumber(context.Background(), num)
+				//for _, miners := range *res1 {
+				//	if miners.Address == common.HexToAddress("0xEE3168308949237d395202F134C4243630ebB4A8") {
+				//		fmt.Println("miner", miners.Address)
+				//		flag = true
+				//		//break
+				//	}
+				//}
+
+				//res1, _ := worm.NFT.GetValidators(context.Background(), num)
+				//for _, validator := range res1.Validators {
+				//	fmt.Println("validator", validator)
+				//	if validator.Addr == common.HexToAddress("0xA7aa3f181aebE59ca697D803B2197cfA50A3913E") {
+				//		fmt.Println("miner", validator) //0x0F7094Cf6391273AAC99b478b8Eca9D636BBbf0c
+				//		flag = true
+				//		break
+				//	}
+				//}
+
+				res1, _ := worm.GetActiveLivePool(context.Background(), uint64(num))
+				for _, miners := range res1.ActiveMiners {
+					fmt.Println("miner", miners)
+					if miners.Address == common.HexToAddress("0xA7aa3f181aebE59ca697D803B2197cfA50A3913E") {
+						fmt.Println("miner", miners) //0x0F7094Cf6391273AAC99b478b8Eca9D636BBbf0c
+						flag = true
+						break
+					}
+				}
+
+				//res1, _ := worm.NFT.QueryMinerProxy(context.Background(), num, "0xA7F60Adc80E09F71a7A56044003a2B606Ed1Cac2")
+				//for _, miners := range res1 {
+				//	if miners.Address == common.HexToAddress("0x279c59A0DC597276bac3D160Cb1596beFA46bad2") {
+				//		fmt.Println("miner", miners)
+				//		flag = true
+				//		break
+				//	}
+				//}
+				num++
+			}
+		}
+	}
+}
+
+func TestGetSNFT(t *testing.T) {
+	worm := client.NewClient("c1e74da8e26c5a60870089f59695a1b243887f9d23571d24c7f011b8eb068768", "http://129.226.154.223:8560")
+	num := int64(40000)
+	snfts := make([]string, 0)
+	for {
+		fmt.Print("blockNumber: ", num)
+		if len(snfts) != 0 {
+			fmt.Print(" snft:")
+			for _, v := range snfts {
+				fmt.Print(" ", v)
+			}
+		} else {
+			fmt.Print(" mei")
+		}
+		fmt.Println()
+		current, _ := worm.BlockNumber(context.Background())
+		if num > int64(current) {
+			time.Sleep(time.Second * 10)
+		}
+
+		res1, _ := worm.GetBlockBeneficiaryAddressByNumber(context.Background(), num)
+		if res1 != nil {
+			for _, info := range *res1 {
+				if strings.EqualFold(info.Address.String(), "0xEb1432C1066D2919ec8C1af5a6Dad5b088A11ae1") {
+					snfts = append(snfts, info.NftAddress.String())
+				}
+			}
+		}
+		num++
+	}
 }
