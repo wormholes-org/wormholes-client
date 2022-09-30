@@ -186,6 +186,19 @@ func (worm *Wormholes) TransactionReceipt(ctx context.Context, txHash string) (*
 	return r, err
 }
 
+func (worm *Wormholes) GetValidators(ctx context.Context, blockNumber int64) (*types2.ValidatorList, error) {
+	blockNrOrHash := rpc.BlockNumber(blockNumber)
+	var r *types2.ValidatorList
+	err := worm.c.CallContext(ctx, &r, "eth_getValidator", blockNrOrHash)
+	if err == nil {
+		if r == nil {
+			return nil, ethereum.NotFound
+		}
+	}
+
+	return r, err
+}
+
 func (worm *Wormholes) GetAccountInfo(ctx context.Context, address string, block int64) (*types2.Account, error) {
 	var addresss common.Address
 	addresss = common.HexToAddress(address)
