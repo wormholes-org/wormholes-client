@@ -515,9 +515,9 @@ func (worm *Wormholes) SNFTToERB(wormAddress string) (string, error) {
 	return strings.ToLower(signedTx.Hash().String()), nil
 }
 
-// TokenPledge
+// SNFTPledge
 //	When a user wants to become a miner, he needs to do an ERB pledge transaction first to pledge the ERB needed to become a miner
-func (worm *Wormholes) TokenPledge(proxySign []byte, proxyAddress string) (string, error) {
+func (worm *Wormholes) SNFTPledge(snftAddress string) (string, error) {
 	ctx := context.Background()
 	account, fromKey, err := tools.PriKeyToAddress(worm.priKey)
 	if err != nil {
@@ -535,10 +535,9 @@ func (worm *Wormholes) TokenPledge(proxySign []byte, proxyAddress string) (strin
 	}
 
 	transaction := types2.Transaction{
-		Type:         types2.TokenPledge,
-		ProxyAddress: proxyAddress,
-		ProxySign:    string(proxySign),
-		Version:      types2.WormHolesVersion,
+		Type:       types2.SNFTPledge,
+		NFTAddress: snftAddress,
+		Version:    types2.WormHolesVersion,
 	}
 
 	data, err := json.Marshal(transaction)
@@ -572,9 +571,123 @@ func (worm *Wormholes) TokenPledge(proxySign []byte, proxyAddress string) (strin
 	return strings.ToLower(signedTx.Hash().String()), nil
 }
 
+// SNFTRevokesPledge
+//	When the user does not want to be a miner, or no longer wants to pledge so much ERB, he can do ERB to revoke the pledge
+func (worm *Wormholes) SNFTRevokesPledge(snftaAddress string) (string, error) {
+	ctx := context.Background()
+	account, fromKey, err := tools.PriKeyToAddress(worm.priKey)
+	if err != nil {
+		log.Println("TokenRevokesPledge() priKeyToAddress err ", err)
+		return "", err
+	}
+
+	nonce, err := worm.PendingNonceAt(ctx, account)
+
+	gasLimit := uint64(50000)
+	gasPrice, err := worm.SuggestGasPrice(ctx)
+	if err != nil {
+		log.Println("TokenRevokesPledge() suggestGasPrice err ", err)
+		return "", err
+	}
+
+	transaction := types2.Transaction{
+		Type:       types2.SNFTRevokesPledge,
+		NFTAddress: snftaAddress,
+		Version:    types2.WormHolesVersion,
+	}
+
+	data, err := json.Marshal(transaction)
+	if err != nil {
+		log.Println("TokenRevokesPledge() failed to format wormholes data")
+		return "", err
+	}
+
+	tx_data := append([]byte("wormholes:"), data...)
+	fmt.Println(string(tx_data))
+
+	wei, _ := new(big.Int).SetString("1000000000000000000", 10)
+	pledge := new(big.Int).Mul(big.NewInt(100000), wei)
+
+	tx := types.NewTransaction(nonce, account, pledge, gasLimit, gasPrice, tx_data)
+	chainID, err := worm.NetworkID(ctx)
+	if err != nil {
+		log.Println("TokenRevokesPledge() networkID err=", err)
+		return "", err
+	}
+	log.Println("chainID=", chainID)
+	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), fromKey)
+	if err != nil {
+		log.Println("TokenRevokesPledge() signTx err ", err)
+		return "", err
+	}
+	err = worm.SendTransaction(ctx, signedTx)
+	if err != nil {
+		log.Println("TokenRevokesPledge() sendTransaction err ", err)
+		return "", err
+	}
+	return strings.ToLower(signedTx.Hash().String()), nil
+}
+
+// TokenPledge
+//	When a user wants to become a miner, he needs to do an ERB pledge transaction first to pledge the ERB needed to become a miner
+func (worm *Wormholes) TokenPledge(proxySign []byte, proxyAddress string, value int64) (string, error) {
+	ctx := context.Background()
+	account, fromKey, err := tools.PriKeyToAddress(worm.priKey)
+	if err != nil {
+		log.Println("TokenPledge() priKeyToAddress err ", err)
+		return "", err
+	}
+
+	nonce, err := worm.PendingNonceAt(ctx, account)
+
+	gasLimit := uint64(70000)
+	gasPrice, err := worm.SuggestGasPrice(ctx)
+	if err != nil {
+		log.Println("TokenPledge() suggestGasPrice err ", err)
+		return "", err
+	}
+
+	transaction := types2.Transaction{
+		Type:         types2.TokenPledge,
+		ProxyAddress: proxyAddress,
+		ProxySign:    string(proxySign),
+		Version:      types2.WormHolesVersion,
+	}
+
+	data, err := json.Marshal(transaction)
+	if err != nil {
+		log.Println("TokenPledge() failed to format wormholes data")
+		return "", err
+	}
+
+	tx_data := append([]byte("wormholes:"), data...)
+	fmt.Println(string(tx_data))
+
+	wei, _ := new(big.Int).SetString("1000000000000000000", 10)
+	pledge := new(big.Int).Mul(big.NewInt(value), wei)
+	tx := types.NewTransaction(nonce, account, pledge, gasLimit, gasPrice, tx_data)
+	chainID, err := worm.NetworkID(ctx)
+	if err != nil {
+		log.Println("TokenPledge() networkID err=", err)
+		return "", err
+	}
+	log.Println("chainID=", chainID)
+	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), fromKey)
+	if err != nil {
+		log.Println("TokenPledge() signTx err ", err)
+		return "", err
+	}
+	err = worm.SendTransaction(ctx, signedTx)
+	if err != nil {
+		log.Println("TokenPledge() sendTransaction err ", err)
+		return "", err
+	}
+	return strings.ToLower(signedTx.Hash().String()), nil
+}
+
 // TokenRevokesPledge
 //	When the user does not want to be a miner, or no longer wants to pledge so much ERB, he can do ERB to revoke the pledge
-func (worm *Wormholes) TokenRevokesPledge() (string, error) {
+func (worm *Wormholes) TokenRevokesPledge(value int64) (string, error) {
 	ctx := context.Background()
 	account, fromKey, err := tools.PriKeyToAddress(worm.priKey)
 	if err != nil {
@@ -606,7 +719,7 @@ func (worm *Wormholes) TokenRevokesPledge() (string, error) {
 	fmt.Println(string(tx_data))
 
 	wei, _ := new(big.Int).SetString("1000000000000000000", 10)
-	pledge := new(big.Int).Mul(big.NewInt(100000), wei)
+	pledge := new(big.Int).Mul(big.NewInt(value), wei)
 
 	tx := types.NewTransaction(nonce, account, pledge, gasLimit, gasPrice, tx_data)
 	chainID, err := worm.NetworkID(ctx)
@@ -740,76 +853,6 @@ func (worm *Wormholes) Close() (string, error) {
 	err = worm.SendTransaction(ctx, signedTx)
 	if err != nil {
 		log.Println("close() sendTransaction err ", err)
-		return "", err
-	}
-	return strings.ToLower(signedTx.Hash().String()), nil
-}
-
-// InsertNFTBlock
-// Deprecated: use VoteOfficialNFT instead.
-//	This transaction is used to inject NFT fragments that can be mined by miners. Only official accounts can do this transaction
-//
-//	Parameter Descriptiom
-//	dir:        "wormholes",  													The path address where sworm is located, the format is a string
-//	startIndex: "0x640001",	 														The start number of the sworm fragment, formatted as a hexadecimal string
-//	number:     6553600,														The number of sworm shards injected, formatted as a decimal string
-//	royalty:    20,																			Royalty, formatted as an integer
-//	creator:    "0xab7624f47fd7dadb6b8e255d06a2f10af55990fe",	creator, format is a hex string
-func (worm *Wormholes) InsertNFTBlock(dir, startIndex string, number uint64, royalty uint32, creator string) (string, error) {
-	err := tools.CheckAddress("InsertNFTBlock() creator", creator)
-	if err != nil {
-		return "", err
-	}
-	ctx := context.Background()
-	account, fromKey, err := tools.PriKeyToAddress(worm.priKey)
-	if err != nil {
-		log.Println("InsertNFTBlock() priKeyToAddress err ", err)
-		return "", err
-	}
-
-	nonce, err := worm.PendingNonceAt(ctx, account)
-
-	gasLimit := uint64(51000)
-	gasPrice, err := worm.SuggestGasPrice(ctx)
-	if err != nil {
-		log.Println("InsertNFTBlock() suggestGasPrice err ", err)
-		return "", err
-	}
-
-	transaction := types2.Transaction{
-		Type:       types2.InsertNFTBlock,
-		Dir:        dir,
-		StartIndex: startIndex,
-		Number:     number,
-		Royalty:    royalty,
-		Creator:    creator,
-		Version:    types2.WormHolesVersion,
-	}
-
-	data, err := json.Marshal(transaction)
-	if err != nil {
-		log.Println("InsertNFTBlock() failed to format wormholes data")
-		return "", err
-	}
-
-	tx_data := append([]byte("wormholes:"), data...)
-	fmt.Println(string(tx_data))
-
-	tx := types.NewTransaction(nonce, account, big.NewInt(0), gasLimit, gasPrice, tx_data)
-	chainID, err := worm.NetworkID(ctx)
-	if err != nil {
-		log.Println("InsertNFTBlock() networkID err=", err)
-		return "", err
-	}
-	log.Println("chainID=", chainID)
-	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), fromKey)
-	if err != nil {
-		log.Println("InsertNFTBlock() signTx err ", err)
-		return "", err
-	}
-	err = worm.SendTransaction(ctx, signedTx)
-	if err != nil {
-		log.Println("InsertNFTBlock() sendTransaction err ", err)
 		return "", err
 	}
 	return strings.ToLower(signedTx.Hash().String()), nil

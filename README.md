@@ -446,7 +446,7 @@ go get github.com/wormholes-org/wormholes-client
 
       `error`   - If the transaction is successful, return nil; if the transaction fails, return the corresponding error
 
-      **示例**
+      **Example**
 
       ```
       package main
@@ -833,7 +833,7 @@ go get github.com/wormholes-org/wormholes-client
 
       `error`   - If the transaction is successful, return nil; if the transaction fails, return the corresponding error
 
-      **示例**
+      **Example**
 
       ```
       package main

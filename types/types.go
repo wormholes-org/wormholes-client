@@ -10,13 +10,13 @@ const (
 	AccountAuthor
 	AccountAuthorRevoke
 	SNFTToERB
-	_
-	_
+	SNFTPledge
+	SNFTRevokesPledge
 	TokenPledge
 	TokenRevokesPledge
 	Open
 	Close
-	InsertNFTBlock
+	_
 	TransactionNFT
 	BuyerInitiatingTransaction
 	FoundryTradeBuyer
