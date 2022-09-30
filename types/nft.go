@@ -37,7 +37,7 @@ type AccountNFT struct {
 	Name                  string
 	Symbol                string
 	Price                 *big.Int
-	Direction             uint8 // 0:未交易,1:买入,2:卖出
+	Direction             uint8 // 0:not traded,1:buyer,2:sell
 	Owner                 common.Address
 	NFTApproveAddressList common.Address
 	//Auctions map[string][]common.Address

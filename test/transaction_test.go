@@ -6,6 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/wormholes-org/wormholes-client/client"
 	"log"
+	"math/big"
 	"strings"
 	"testing"
 	"time"
@@ -110,7 +111,7 @@ func TestSNFTToERB(t *testing.T) {
 //ERB pledge 9
 func TestTokenPledge(t *testing.T) {
 	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.TokenPledge([]byte(""), "")
+	rs, _ := worm.TokenPledge([]byte(""), "", 10)
 	fmt.Println(rs)
 }
 
@@ -120,7 +121,7 @@ func TestTokenPledge(t *testing.T) {
 //ERB revokes pledge 10
 func TestTokenRevokesPledge(t *testing.T) {
 	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.TokenRevokesPledge()
+	rs, _ := worm.TokenRevokesPledge(10)
 	fmt.Println(rs)
 }
 
@@ -141,16 +142,6 @@ func TestOpen(t *testing.T) {
 func TestClose(t *testing.T) {
 	worm := client.NewClient(exchangerPriKey, endpoint)
 	rs, _ := worm.Close()
-	fmt.Println(rs)
-}
-
-//0x7d5b3653b67d298e7cce82b92fa720224e93941315528ef19a36c4daf1efe929
-
-//InsertNFTBlock
-//Injecting System NFT Fragments 13
-func TestInsertNFTBlock(t *testing.T) {
-	worm := client.NewClient(priKey, endpoint)
-	rs, _ := worm.InsertNFTBlock("wormholes2", "0x640001", 6553600, 20, "0xab7624f47fd7dadb6b8e255d06a2f10af55990fe")
 	fmt.Println(rs)
 }
 
@@ -432,33 +423,48 @@ func TestCheckNFTPool(t *testing.T) {
 }
 
 func TestGetSNFT(t *testing.T) {
-	worm := client.NewClient("c1e74da8e26c5a60870089f59695a1b243887f9d23571d24c7f011b8eb068768", "http://129.226.154.223:8560")
-	num := int64(40000)
-	snfts := make([]string, 0)
+	exchanger := make(map[string]string)
+	exchanger["0x68B14e0F18C3EE322d3e613fF63B87E56D86Df60"] = "d8cf127b1780c0a0e0d2e40519ae2c611d6d7f6b8b706c967ed8183170267d99"
+	exchanger["0xeEF79493F62dA884389312d16669455A7E0045c1"] = "9bdbec1e6329a5484105c05aacbbce9ff78a287d20cbd8a8b59c414b5e1edbb6"
+	exchanger["0xa5999Cc1DEC36a632dF735064Dc75eF6af0E7389"] = "b6290ad66f10eead80c1371be065af9493ff0cc611fa6d4c207f46e2516f2f38"
+	exchanger["0x63d913dfDB75C7B09a1465Fe77B8Ec167793096b"] = "b1c0f70e418cdc851534c6a09c40a50b676466819c3cd65a7aeed9cb581d1643"
+	exchanger["0xF50f73B83721c108E8868C5A2706c5b194A0FDB1"] = "f17a19d3d0c4620759e4e365ef79f2553b0639fd1a7bdfbafe570f7e3d59f7aa"
+	exchanger["0xB000811Aff6e891f8c0F1aa07f43C1976D4c3076"] = "ec299549a07e9e6202999445dccfe6a1efdc3af75dd942461a403d4a3a03edb3"
+	exchanger["0x257F3c6749a0690d39c6FBCd2DceB3fB464f0F94"] = "382b13e70a7e66f7f6d94007b977c1ad6acdc8f454ee77e3e5bb159d0e09f7cb"
+	exchanger["0x43ee5cB067F29B920CC44d5d5367BCEb162B4d9E"] = "405321241ccffe1d2bddcac1202209460a5a0caded3a9b203bdbba5c40f45de0"
+	exchanger["0x85D3FDA364564c365870233E5aD6B611F2227846"] = "efdb9f92fbae899e8069a41c3ed589f6fdaf9cc0be1da86bb5d0cf77ccf3b5d3"
+	exchanger["0xDc807D83d864490C6EEDAC9C9C071E9AAeD8E7d7"] = "ef5664558107effaa7a20d01c328037a15e9a4989a06be79249f517dad7c7eea"
+	exchanger["0xFA623BCC71BE5C3aBacfe875E64ef97F91B7b110"] = "f6842d3207b8b81a5ea1e3d08fcb013ec2ef8a320e325252cd2af18c390772fe"
+	exchanger["0xb17fAe1710f80Eb9a39732862B0058077F338B21"] = "38f6551752c4c561fe68abe365eae069cc667ae31a92bf3d52df468d918454c6"
+	exchanger["0x86FFd3e5a6D310Fcb4668582eA6d0cfC1c35da49"] = "d60c5a8a3fdc26b22533d1c5fffdb11c12b17771cd9f2380e71df30a8970a8b1"
+	exchanger["0x6bB0599bC9c5406d405a8a797F8849dB463462D0"] = "04a5ddb33b11fff6923b5eee08f949fead766e9d92a42f4350c726a1b18ffc81"
+	exchanger["0x765C83dbA2712582C5461b2145f054d4F85a3080"] = "a1a78a79fb1159a4c871a20a60f1a05ece8189115226fda182565d027b0015da"
+
+	var collects = "0xC65F08C9Dfceb0988631B175E293Af5666535CF0"
+
+	var Empty, _ = new(big.Int).SetString("0x0000000000000000000000000000000000000000", 16)
+
+	worm := client.NewClient("38fc3f36f420ca662e0b423342b61243337a84f992eb60847a67cb8fe90af133", "http://192.168.4.240:8561")
+	Nft, _ := new(big.Int).SetString("8000000000000000000000000000000000000000", 16)
+	ctx := context.Background()
 	for {
-		fmt.Print("blockNumber: ", num)
-		if len(snfts) != 0 {
-			fmt.Print(" snft:")
-			for _, v := range snfts {
-				fmt.Print(" ", v)
-			}
-		} else {
-			fmt.Print(" mei")
-		}
-		fmt.Println()
-		current, _ := worm.BlockNumber(context.Background())
-		if num > int64(current) {
-			time.Sleep(time.Second * 10)
+		latest, _ := worm.BlockNumber(ctx)
+		address := common.BytesToAddress(Nft.Bytes())
+		res1, _ := worm.GetAccountInfo(context.Background(), address.String(), int64(latest))
+
+		if (*res1).Owner.String() == common.BytesToAddress(Empty.Bytes()).String() {
+			time.Sleep(time.Second * 5)
 		}
 
-		res1, _ := worm.GetBlockBeneficiaryAddressByNumber(context.Background(), num)
-		if res1 != nil {
-			for _, info := range *res1 {
-				if strings.EqualFold(info.Address.String(), "0xEb1432C1066D2919ec8C1af5a6Dad5b088A11ae1") {
-					snfts = append(snfts, info.NftAddress.String())
-				}
+		for ex, pri := range exchanger {
+			fmt.Println((*res1).Owner.String())
+			fmt.Println(ex)
+			if strings.ToLower(ex) == strings.ToLower(res1.Owner.String()) {
+				worms := client.NewClient(pri, "http://192.168.4.240:8561")
+				worms.Transfer(common.BytesToAddress(Nft.Bytes()).String(), collects)
+				break
 			}
 		}
-		num++
+		Nft = new(big.Int).Add(Nft, big.NewInt(1))
 	}
 }
