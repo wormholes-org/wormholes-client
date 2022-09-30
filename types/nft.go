@@ -50,6 +50,17 @@ type AccountNFT struct {
 	MetaURL   string
 }
 
+type ValidatorList struct {
+	Validators []*Validator
+}
+
+type Validator struct {
+	Addr    common.Address
+	Balance *big.Int
+	Proxy   common.Address
+	Weight  []*big.Int
+}
+
 type BeneficiaryAddress struct {
 	Address    common.Address
 	NftAddress common.Address
