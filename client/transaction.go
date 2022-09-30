@@ -862,7 +862,7 @@ func (worm *Wormholes) Close() (string, error) {
 //	For buying and selling NFTs that have been minted, the transaction originator can be an exchange or a seller
 //
 //	Parameter Description
-//	buyer: { "price":"0xde0b6b3a7640000", "worm_address":"0x0000000000000000000000000000000000000002", "exchanger":"0xe61e5Bbe724B8F449B5C7BB4a09F99A057253eB4", "block_number":"0x487", "sig":"0x24355436e991443b8ed3fb83e8c2fa02f8e2bfc0f716c320f836ee7d756e3c712e7e2510b994d1cb7be85d6643233abc81c23929ce7c1c1effd93db261aac5211b" }																				买家
+//	buyer: { "price":"0xde0b6b3a7640000", "worm_address":"0x0000000000000000000000000000000000000002", "exchanger":"0xe61e5Bbe724B8F449B5C7BB4a09F99A057253eB4", "block_number":"0x487", "sig":"0x24355436e991443b8ed3fb83e8c2fa02f8e2bfc0f716c320f836ee7d756e3c712e7e2510b994d1cb7be85d6643233abc81c23929ce7c1c1effd93db261aac5211b" }																				buyer
 //	to:     "0x5051B76579BC966A9480dd6E72B39A4C89c1154C",				Buyer's address
 func (worm *Wormholes) TransactionNFT(buyer []byte, to string) (string, error) {
 	err := tools.CheckAddress("TransactionNFT() to", to)
