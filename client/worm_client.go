@@ -313,17 +313,6 @@ func (worm *Wormholes) QueryMinerProxy(ctx context.Context, number int64, accoun
 	return result, err
 }
 
-func (worm *Wormholes) GetActiveLivePool(ctx context.Context, number uint64) (*types2.ActiveMinerList, error) {
-	var al *types2.ActiveMinerList
-	nu := rpc.BlockNumber(number)
-	err := worm.c.CallContext(ctx, &al, "eth_getActiveLivePool", nu)
-	if err != nil {
-		return nil, err
-	}
-	fmt.Println(al)
-	return al, err
-}
-
 func (w *Wallet) Sign(data []byte, priKey string) ([]byte, error) {
 	key, err := crypto.HexToECDSA(priKey)
 	if err != nil {
