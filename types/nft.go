@@ -21,6 +21,7 @@ type Account struct {
 	BlockNumber      *big.Int
 	ExchangerBalance *big.Int
 	VoteWeight       *big.Int
+	Coefficient      uint8
 	// The ratio that exchanger get.
 	FeeRate       uint32
 	ExchangerName string
