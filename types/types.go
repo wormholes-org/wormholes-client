@@ -29,7 +29,7 @@ const (
 	VoteOfficialNFT
 	VoteOfficialNFTByApprovedExchanger
 	UnforzenAccount
-	_
+	RecoverCoefficient
 	_
 	_
 	_

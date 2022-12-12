@@ -26,5 +26,6 @@ type APIs interface {
 	VoteOfficialNFT(dir, startIndex string, number uint64, royalty uint32, creator string) (string, error)                                          //23
 	VoteOfficialNFTByApprovedExchanger(dir, startIndex string, number uint64, royalty uint32, creator string, exchangerAuth []byte) (string, error) //24
 	UnforzenAccount() (string, error)                                                                                                               //25
-	AccountDelegate(proxySign []byte, proxyAddress string) (string, error)                                                                          //31
+	RecoverCoefficient() (string, error)
+	AccountDelegate(proxySign []byte, proxyAddress string) (string, error) //31
 }

@@ -1833,4 +1833,53 @@ func (worm *Wormholes) AccountDelegate(proxySign []byte, proxyAddress string) (s
 	return strings.ToLower(signedTx.Hash().String()), nil
 }
 
+func (worm *Wormholes) RecoverCoefficient() (string, error) {
+	ctx := context.Background()
+	account, fromKey, err := tools.PriKeyToAddress(worm.priKey)
+	if err != nil {
+		return "", err
+	}
+
+	nonce, err := worm.PendingNonceAt(ctx, account)
+
+	gasLimit := uint64(60000)
+	gasPrice, err := worm.SuggestGasPrice(ctx)
+	if err != nil {
+		log.Println("RecoverCoefficient() suggestGasPrice err ", err)
+		return "", err
+	}
+
+	transaction := types2.Transaction{
+		Type:    types2.RecoverCoefficient,
+		Version: types2.WormHolesVersion,
+	}
+
+	data, err := json.Marshal(transaction)
+	if err != nil {
+		log.Println("RecoverCoefficient() failed to format wormholes data")
+		return "", err
+	}
+
+	tx_data := append([]byte("wormholes:"), data...)
+
+	tx := types.NewTransaction(nonce, account, big.NewInt(0), gasLimit, gasPrice, tx_data)
+	chainID, err := worm.NetworkID(ctx)
+	if err != nil {
+		log.Println("RecoverCoefficient() networkID err ", err)
+		return "", err
+	}
+	log.Println("chainID=", chainID)
+	signedTx, err := types.SignTx(tx, types.NewEIP155Signer(chainID), fromKey)
+	if err != nil {
+		log.Println("RecoverCoefficient() signTx err ", err)
+		return "", err
+	}
+	err = worm.SendTransaction(ctx, signedTx)
+	if err != nil {
+		log.Println("RecoverCoefficient() sendTransaction err ", err)
+		return "", err
+	}
+	return strings.ToLower(signedTx.Hash().String()), nil
+}
+
 var _ APIs = &Wormholes{}
