@@ -287,6 +287,28 @@ func (worm *Wormholes) GetAccountInfo(ctx context.Context, address string, block
 	return r, err
 }
 
+func (worm *Wormholes) GetStakers(ctx context.Context, number uint64) (*types2.ValidatorList, error) {
+	var al *types2.ValidatorList
+	nu := rpc.BlockNumber(number)
+	err := worm.c.CallContext(ctx, &al, "eth_getValidator", nu)
+	if err != nil {
+		return nil, err
+	}
+	return al, err
+}
+
+func (worm *Wormholes) GetValidators(ctx context.Context, block int64) (*types2.ValidatorList, error) {
+	blocNumber := rpc.BlockNumber(block)
+	var r *types2.ValidatorList
+	err := worm.c.CallContext(ctx, &r, "eth_getValidator", blocNumber)
+	if err == nil {
+		if r == nil {
+			return nil, ethereum.NotFound
+		}
+	}
+	return r, nil
+}
+
 func (worm *Wormholes) GetBlockBeneficiaryAddressByNumber(ctx context.Context, block int64) (*types2.BeneficiaryAddressList, error) {
 	blockNumber := rpc.BlockNumber(block)
 	var r *types2.BeneficiaryAddressList
