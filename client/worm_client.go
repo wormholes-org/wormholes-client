@@ -68,8 +68,9 @@ func (worm *Wormholes) ChainID(ctx context.Context) (*big.Int, error) {
 //
 // Note that loading full blocks requires two requests. Use HeaderByNumber
 // if you don't need all transactions or uncle headers.
-func (worm *Wormholes) BlockByNumber(ctx context.Context, number *big.Int) (*types.Block, error) {
-	return worm.getBlock(ctx, "eth_getBlockByNumber", toBlockNumArg(number), true)
+func (worm *Wormholes) BlockByNumber(ctx context.Context, number int64) (*types.Block, error) {
+	blockNumber := new(big.Int).SetInt64(number)
+	return worm.getBlock(ctx, "eth_getBlockByNumber", toBlockNumArg(blockNumber), true)
 }
 
 type rpcBlock struct {
