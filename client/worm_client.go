@@ -512,3 +512,31 @@ func (w *Wallet) SignDelegate(address, pledgeAcoount string) ([]byte, error) {
 	signature[64] += 27
 	return []byte(hexutil.Encode(signature)), nil
 }
+
+func (worm *Wormholes) GetRandom11ValidatorsWithOutProxy(ctx context.Context, number uint64) ([]common.Address, error) {
+	var res []common.Address
+	err := worm.c.CallContext(ctx, &res, "erb_getValidators", rpc.BlockNumber(number))
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (worm *Wormholes) GetRandom11ValidatorsWithProxy(ctx context.Context, number uint64) ([]common.Address, error) {
+	var res []common.Address
+	err := worm.c.CallContext(ctx, &res, "erb_getElevenValidatorsWithProxy", rpc.BlockNumber(number))
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func(worm *Wormholes)GetRealAddr(ctx context.Context, addr common.Address)(common.Address, error){
+	var res common.Address
+	err := worm.c.CallContext(ctx, &res, "erb_getRealAddr", addr)
+	if err != nil {
+		return res, err
+	}
+	return res, nil
+}
+

@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	endpoint         = "http://127.0.0.1:8560"
+	endpoint         = "http://192.168.4.223:8560"
 	priKey           = "7c6786275d6011adb6288587757653d3f9061275bafc2c35ae62efe0bc4973e9"
 	buyerPriKey      = "f616c4d20311a2e73c67ef334630f834b7fb42304a1d4448fb2058e9940ecc0a"
 	buyerAddress     = "0x44d952db5dfb4cbb54443554f4bb9cbebee2194c"
