@@ -1,5 +1,7 @@
 package types
 
+import "github.com/ethereum/go-ethereum/common"
+
 const WormHolesVersion = "v0.0.1"
 
 const (
@@ -94,4 +96,9 @@ type ExchangerAuth struct {
 	To             string `json:"to,omitempty"`
 	BlockNumber    string `json:"block_number,omitempty"`
 	Sig            string `json:"sig,omitempty"`
+}
+
+type BlockParticipants struct {
+	Address     common.Address `json:"address"`
+	Coefficient uint8          `json:"coefficient"`
 }

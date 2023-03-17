@@ -531,7 +531,7 @@ func (worm *Wormholes) GetRandom11ValidatorsWithProxy(ctx context.Context, numbe
 	return res, nil
 }
 
-func(worm *Wormholes)GetRealAddr(ctx context.Context, addr common.Address)(common.Address, error){
+func (worm *Wormholes) GetRealAddr(ctx context.Context, addr common.Address) (common.Address, error) {
 	var res common.Address
 	err := worm.c.CallContext(ctx, &res, "erb_getRealAddr", addr)
 	if err != nil {
@@ -540,3 +540,12 @@ func(worm *Wormholes)GetRealAddr(ctx context.Context, addr common.Address)(commo
 	return res, nil
 }
 
+func (worm *Wormholes) GetCoefficientByNumber(ctx context.Context, number uint64) ([]*types2.BlockParticipants, error) {
+	blockNo := rpc.BlockNumber(number)
+	var res []*types2.BlockParticipants
+	err := worm.c.CallContext(ctx, &res, "erb_getCoefficientByNumber", blockNo)
+	if err != nil {
+		return res, err
+	}
+	return res, nil
+}
