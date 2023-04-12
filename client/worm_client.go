@@ -4,6 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
+	"math/big"
+
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -12,8 +15,6 @@ import (
 	"github.com/ethereum/go-ethereum/rpc"
 	"github.com/wormholes-org/wormholes-client/tools"
 	types2 "github.com/wormholes-org/wormholes-client/types"
-	"log"
-	"math/big"
 )
 
 type Wallet struct {
@@ -148,6 +149,17 @@ func (worm *Wormholes) BlockNumber(ctx context.Context) (uint64, error) {
 	var result hexutil.Uint64
 	err := worm.c.CallContext(ctx, &result, "eth_blockNumber")
 	return uint64(result), err
+}
+
+func (worm *Wormholes) GetBlockByNumber(ctx context.Context, number *big.Int) (map[string]interface{}, error) {
+	var raw json.RawMessage
+	block := make(map[string]interface{})
+	worm.c.CallContext(ctx, &raw, "eth_getBlockByNumber", toBlockNumArg(number), true)
+	err := json.Unmarshal(raw, &block)
+	if err != nil {
+		return nil, err
+	}
+	return block, nil
 }
 
 type rpcTransaction struct {
@@ -499,4 +511,41 @@ func (w *Wallet) SignDelegate(address, pledgeAcoount string) ([]byte, error) {
 
 	signature[64] += 27
 	return []byte(hexutil.Encode(signature)), nil
+}
+
+func (worm *Wormholes) GetRandom11ValidatorsWithOutProxy(ctx context.Context, number uint64) ([]common.Address, error) {
+	var res []common.Address
+	err := worm.c.CallContext(ctx, &res, "erb_getValidators", rpc.BlockNumber(number))
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (worm *Wormholes) GetRandom11ValidatorsWithProxy(ctx context.Context, number uint64) ([]common.Address, error) {
+	var res []common.Address
+	err := worm.c.CallContext(ctx, &res, "erb_getElevenValidatorsWithProxy", rpc.BlockNumber(number))
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
+
+func (worm *Wormholes) GetRealAddr(ctx context.Context, addr common.Address) (common.Address, error) {
+	var res common.Address
+	err := worm.c.CallContext(ctx, &res, "erb_getRealAddr", addr)
+	if err != nil {
+		return res, err
+	}
+	return res, nil
+}
+
+func (worm *Wormholes) GetCoefficientByNumber(ctx context.Context, number uint64) ([]*types2.BlockParticipants, error) {
+	blockNo := rpc.BlockNumber(number)
+	var res []*types2.BlockParticipants
+	err := worm.c.CallContext(ctx, &res, "erb_getCoefficientByNumber", blockNo)
+	if err != nil {
+		return res, err
+	}
+	return res, nil
 }

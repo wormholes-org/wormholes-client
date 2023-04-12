@@ -29,6 +29,7 @@ type Account struct {
 	ApproveAddressList []common.Address
 	// NFTBalance is the nft number that the account have
 	NFTBalance uint64
+	Coefficient      uint8
 	AccountNFT
 }
 

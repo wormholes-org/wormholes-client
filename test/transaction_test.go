@@ -3,17 +3,18 @@ package test
 import (
 	"context"
 	"fmt"
-	"github.com/ethereum/go-ethereum/common"
-	"github.com/wormholes-org/wormholes-client/client"
 	"log"
 	"math/big"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/ethereum/go-ethereum/common"
+	"github.com/wormholes-org/wormholes-client/client"
 )
 
 const (
-	endpoint         = "http://192.168.4.237:8574"
+	endpoint         = "http://192.168.4.223:8560"
 	priKey           = "7c6786275d6011adb6288587757653d3f9061275bafc2c35ae62efe0bc4973e9"
 	buyerPriKey      = "f616c4d20311a2e73c67ef334630f834b7fb42304a1d4448fb2058e9940ecc0a"
 	buyerAddress     = "0x44d952db5dfb4cbb54443554f4bb9cbebee2194c"
@@ -365,62 +366,62 @@ func TestGetBalance(t *testing.T) {
 	fmt.Println(balance)
 }
 
-func TestCheckNFTPool(t *testing.T) {
-	worm := client.NewClient("c1e74da8e26c5a60870089f59695a1b243887f9d23571d24c7f011b8eb068768", "http://192.168.4.240:8561")
+// func TestCheckNFTPool(t *testing.T) {
+// 	worm := client.NewClient("c1e74da8e26c5a60870089f59695a1b243887f9d23571d24c7f011b8eb068768", "http://192.168.4.240:8561")
 
-	var flag bool
-	num := int64(22)
-	for {
-		if flag {
-			break
-		} else {
-			current, _ := worm.BlockNumber(context.Background())
-			if uint64(num) > current {
-				time.Sleep(time.Second * 5)
-			} else {
-				fmt.Println("num: ", num)
-				//res1, _ := worm.NFT.GetBlockBeneficiaryAddressByNumber(context.Background(), num)
-				//for _, miners := range *res1 {
-				//	if miners.Address == common.HexToAddress("0xEE3168308949237d395202F134C4243630ebB4A8") {
-				//		fmt.Println("miner", miners.Address)
-				//		flag = true
-				//		//break
-				//	}
-				//}
+// 	var flag bool
+// 	num := int64(22)
+// 	for {
+// 		if flag {
+// 			break
+// 		} else {
+// 			current, _ := worm.BlockNumber(context.Background())
+// 			if uint64(num) > current {
+// 				time.Sleep(time.Second * 5)
+// 			} else {
+// 				fmt.Println("num: ", num)
+// 				//res1, _ := worm.NFT.GetBlockBeneficiaryAddressByNumber(context.Background(), num)
+// 				//for _, miners := range *res1 {
+// 				//	if miners.Address == common.HexToAddress("0xEE3168308949237d395202F134C4243630ebB4A8") {
+// 				//		fmt.Println("miner", miners.Address)
+// 				//		flag = true
+// 				//		//break
+// 				//	}
+// 				//}
 
-				//res1, _ := worm.NFT.GetValidators(context.Background(), num)
-				//for _, validator := range res1.Validators {
-				//	fmt.Println("validator", validator)
-				//	if validator.Addr == common.HexToAddress("0xA7aa3f181aebE59ca697D803B2197cfA50A3913E") {
-				//		fmt.Println("miner", validator) //0x0F7094Cf6391273AAC99b478b8Eca9D636BBbf0c
-				//		flag = true
-				//		break
-				//	}
-				//}
+// 				//res1, _ := worm.NFT.GetValidators(context.Background(), num)
+// 				//for _, validator := range res1.Validators {
+// 				//	fmt.Println("validator", validator)
+// 				//	if validator.Addr == common.HexToAddress("0xA7aa3f181aebE59ca697D803B2197cfA50A3913E") {
+// 				//		fmt.Println("miner", validator) //0x0F7094Cf6391273AAC99b478b8Eca9D636BBbf0c
+// 				//		flag = true
+// 				//		break
+// 				//	}
+// 				//}
 
-				res1, _ := worm.GetActiveLivePool(context.Background(), uint64(num))
-				for _, miners := range res1.ActiveMiners {
-					fmt.Println("miner", miners)
-					if miners.Address == common.HexToAddress("0xA7aa3f181aebE59ca697D803B2197cfA50A3913E") {
-						fmt.Println("miner", miners) //0x0F7094Cf6391273AAC99b478b8Eca9D636BBbf0c
-						flag = true
-						break
-					}
-				}
+// 				res1, _ := worm.GetActiveLivePool(context.Background(), uint64(num))
+// 				for _, miners := range res1.ActiveMiners {
+// 					fmt.Println("miner", miners)
+// 					if miners.Address == common.HexToAddress("0xA7aa3f181aebE59ca697D803B2197cfA50A3913E") {
+// 						fmt.Println("miner", miners) //0x0F7094Cf6391273AAC99b478b8Eca9D636BBbf0c
+// 						flag = true
+// 						break
+// 					}
+// 				}
 
-				//res1, _ := worm.NFT.QueryMinerProxy(context.Background(), num, "0xA7F60Adc80E09F71a7A56044003a2B606Ed1Cac2")
-				//for _, miners := range res1 {
-				//	if miners.Address == common.HexToAddress("0x279c59A0DC597276bac3D160Cb1596beFA46bad2") {
-				//		fmt.Println("miner", miners)
-				//		flag = true
-				//		break
-				//	}
-				//}
-				num++
-			}
-		}
-	}
-}
+// 				//res1, _ := worm.NFT.QueryMinerProxy(context.Background(), num, "0xA7F60Adc80E09F71a7A56044003a2B606Ed1Cac2")
+// 				//for _, miners := range res1 {
+// 				//	if miners.Address == common.HexToAddress("0x279c59A0DC597276bac3D160Cb1596beFA46bad2") {
+// 				//		fmt.Println("miner", miners)
+// 				//		flag = true
+// 				//		break
+// 				//	}
+// 				//}
+// 				num++
+// 			}
+// 		}
+// 	}
+// }
 
 func TestGetSNFT(t *testing.T) {
 	exchanger := make(map[string]string)
@@ -466,5 +467,98 @@ func TestGetSNFT(t *testing.T) {
 			}
 		}
 		Nft = new(big.Int).Add(Nft, big.NewInt(1))
+	}
+}
+
+//"number":           (*hexutil.Big)(head.Number),
+//"hash":             head.Hash(),
+//"parentHash":       head.ParentHash,
+//"nonce":            head.Nonce,
+//"mixHash":          head.MixDigest,
+//"sha3Uncles":       head.UncleHash,
+//"logsBloom":        head.Bloom,
+//"stateRoot":        head.Root,
+//"miner":            miner,
+//"difficulty":       (*hexutil.Big)(head.Difficulty),
+//"extraData":        hexutil.Bytes(head.Extra),
+//"size":             hexutil.Uint64(head.Size()),
+//"gasLimit":         hexutil.Uint64(head.GasLimit),
+//"gasUsed":          hexutil.Uint64(head.GasUsed),
+//"timestamp":        hexutil.Uint64(head.Time),
+//"transactionsRoot": head.TxHash,
+//"receiptsRoot":     head.ReceiptHash,
+
+type BlockInfo struct {
+	Hash    string
+	PreHash string
+	Number  uint64
+	Miner   string
+}
+
+func TestAnalysisBlocks(t *testing.T) {
+	worm := client.NewClient(priKey, endpoint)
+	blockInfoMap := make(map[uint64]*BlockInfo, 0)
+	for {
+		time.Sleep(1 * time.Second)
+		currentBlockNumber, _ := worm.BlockNumber(context.Background())
+		currentBlock, err := worm.GetBlockByNumber(context.Background(), new(big.Int).SetUint64(currentBlockNumber))
+		if err != nil {
+			continue
+		}
+		t.Log(currentBlock["hash"])
+		t.Log(currentBlock["parentHash"])
+		t.Log(currentBlock["miner"])
+		hash := currentBlock["hash"].(string)
+		prehash := currentBlock["parentHash"].(string)
+		miner := currentBlock["miner"].(string)
+		t.Log(hash)
+		t.Log(prehash)
+		t.Log(miner)
+
+		currentBlockInfo := &BlockInfo{
+			Hash:    hash,
+			PreHash: prehash,
+			Number:  currentBlockNumber,
+			Miner:   miner,
+		}
+
+		v, ok := blockInfoMap[currentBlockNumber]
+		if ok {
+			if v.Hash != hash {
+				t.Error("fork, two blocks have same blocknumber, but not same hash \n",
+					"blocknumber ", currentBlockNumber, "\nold hash ", v.Hash, "new hash", hash,
+					"\nold miner ", v.Miner, "new miner ", miner)
+			}
+		} else {
+			t.Log("current block number ", currentBlockNumber)
+			blockInfoMap[currentBlockNumber] = currentBlockInfo
+		}
+		if preBlockInfo, ok := blockInfoMap[currentBlockNumber-1]; ok {
+			if preBlockInfo.Hash != currentBlockInfo.PreHash {
+				t.Error("fork, new block's prehash is not same with the parent block's hash\n",
+					"new block number ", currentBlockInfo.Number,
+					"\nnew block's prehash ", currentBlockInfo.PreHash,
+					"parent block's hash ", preBlockInfo.Hash)
+				break
+			}
+		}
+
+		t.Log("map len ", len(blockInfoMap))
+		var startDeleteIndex uint64
+		var deleteIndexs []uint64
+		if len(blockInfoMap) > 1000 {
+			startDeleteIndex = currentBlockNumber - 1000
+
+			for k, _ := range blockInfoMap {
+				if k <= startDeleteIndex {
+					deleteIndexs = append(deleteIndexs, k)
+				}
+			}
+
+			for _, v := range deleteIndexs {
+				delete(blockInfoMap, v)
+			}
+			deleteIndexs = deleteIndexs[:0]
+		}
 	}
 }
