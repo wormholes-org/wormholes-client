@@ -27,8 +27,8 @@ type Wormholes struct {
 }
 
 // NewClient creates a new wormclient for the given URL and priKey.
-//when the rawurl is  nil, Initialize the wallet, can sign buyer, seller, exchange information.
-//when the rawurl is not nil, Initialize the NFT, can carry out nft related transactions.
+// when the rawurl is  nil, Initialize the wallet, can sign buyer, seller, exchange information.
+// when the rawurl is not nil, Initialize the NFT, can carry out nft related transactions.
 func NewClient(priKey, rawurl string) *Wormholes {
 	if rawurl == "" {
 		return &Wormholes{
@@ -52,6 +52,10 @@ func NewClient(priKey, rawurl string) *Wormholes {
 
 func (worm *Wormholes) CloseConnect() {
 	worm.c.Close()
+}
+
+func (worm *Wormholes) UpdatePri(pri string) {
+	worm.priKey = pri
 }
 
 // ChainID retrieves the current chain ID for transaction replay protection.
@@ -355,11 +359,11 @@ func (w *Wallet) Sign(data []byte, priKey string) ([]byte, error) {
 }
 
 // SignBuyer
-//amount: The amount the buyer purchased the NFT, formatted as a hexadecimal string
-//nftAddress: The NFT address of the transaction. The format is a hexadecimal string. When this field is filled in, it means that the transaction has minted nft. When not filled, it means lazy transaction, and the nft has not been minted
-//exchanger: The exchange on which the transaction took place, formatted as a decimal string
-//blockNumber: Block height, which means that this transaction is valid before this height, the format is a hexadecimal string
-//seller: Seller's address, formatted as a hexadecimal string
+// amount: The amount the buyer purchased the NFT, formatted as a hexadecimal string
+// nftAddress: The NFT address of the transaction. The format is a hexadecimal string. When this field is filled in, it means that the transaction has minted nft. When not filled, it means lazy transaction, and the nft has not been minted
+// exchanger: The exchange on which the transaction took place, formatted as a decimal string
+// blockNumber: Block height, which means that this transaction is valid before this height, the format is a hexadecimal string
+// seller: Seller's address, formatted as a hexadecimal string
 func (w *Wallet) SignBuyer(amount, nftAddress, exchanger, blockNumber, seller string) ([]byte, error) {
 	key, err := crypto.HexToECDSA(w.priKey)
 	if err != nil {
@@ -392,6 +396,7 @@ func (w *Wallet) SignBuyer(amount, nftAddress, exchanger, blockNumber, seller st
 
 // SignSeller1
 // Signed Mint Seller
+//
 //	amount: The amount the buyer purchased the NFT, formatted as a hexadecimal string
 //	nftAddress: The NFT address of the transaction, formatted as a hexadecimal string
 //	exchanger:	The exchange on which the transaction took place, formatted as a decimal string
@@ -427,6 +432,7 @@ func (w *Wallet) SignSeller1(amount, nftAddress, exchanger, blockNumber string) 
 
 // SignSeller2
 // Signed Unminted Seller
+//
 //	amount: The amount of the NFT transaction, formatted as a hexadecimal string
 //	royalty: royalty, hex string
 //	metaURL: NFT metadata address
@@ -466,8 +472,9 @@ func (w *Wallet) SignSeller2(amount, royalty, metaURL, exclusiveFlag, exchanger,
 
 // SignExchanger
 // Signed by an authorized exchange
+//
 //	exchangerOwner: Authorize exchange, formatted as a hexadecimal string
-// 	to: Authorized exchange, formatted as a hexadecimal string
+//	to: Authorized exchange, formatted as a hexadecimal string
 //	block_number: Block height, which means that this transaction is valid before this height, the format is a hexadecimal string
 func (w *Wallet) SignExchanger(exchangerOwner, to, blockNumber string) ([]byte, error) {
 	key, err := crypto.HexToECDSA(w.priKey)
