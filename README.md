@@ -1,5 +1,7 @@
 # Introduction
 
+[![Join the chat at https://gitter.im/wormholes-org/Internal-test-miner](https://badges.gitter.im/wormholes-org/Internal-test-miner.svg)](https://gitter.im/wormholes-org/Internal-test-miner?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 - ## Install
 
 ```go
